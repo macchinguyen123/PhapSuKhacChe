@@ -89,12 +89,12 @@ public class PhapSuKhacCheView extends JFrame {
 
         playerImgLabel = new JLabel();
         playerImgLabel.setBounds(100, 200, 200, 200);
-        setCharacterImage(playerImgLabel, player);
+        setCharacterImage(playerImgLabel, player, true);  // người chơi
         bgLabel.add(playerImgLabel);
 
         enemyImgLabel = new JLabel();
         enemyImgLabel.setBounds(650, 200, 200, 200);
-        setCharacterImage(enemyImgLabel, enemy);
+        setCharacterImage(enemyImgLabel, enemy, false);   // máy
         bgLabel.add(enemyImgLabel);
 
         JLabel playerLabel = new JLabel(player.getName(), SwingConstants.CENTER);
@@ -217,17 +217,26 @@ public class PhapSuKhacCheView extends JFrame {
         timer.start();
     }
 
-    private void setCharacterImage(JLabel label, CharacterModel model) {
+    private void setCharacterImage(JLabel label, CharacterModel model, boolean isPlayer) {
         ImageIcon icon;
-        if (model instanceof HoaLongModel)
+
+        if (model instanceof HoaLongModel) {
             icon = new ImageIcon("src/img/Screenshot 2025-10-30 233345.png");
-        else if (model instanceof ThuyTamModel)
+
+        } else if (model instanceof ThuyTamModel) {
             icon = new ImageIcon("src/img/Screenshot 2025-10-30 235048.png");
-        else
-            icon = new ImageIcon("src/img/Screenshot 2025-10-30 233345.png");
+
+        } else {
+            // model là Phong Vũ → phân biệt người chơi hay máy
+            if (isPlayer)
+                icon = new ImageIcon("src/img/nguoiChoi/PhongVuUser.png");
+            else
+                icon = new ImageIcon("src/img/may/PhongVuMay.png");
+        }
 
         Image scaled = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         label.setIcon(new ImageIcon(scaled));
     }
+
 
 }
