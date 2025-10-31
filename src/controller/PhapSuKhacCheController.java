@@ -47,6 +47,7 @@ public class PhapSuKhacCheController {
 
     // === Lượt người chơi ===
     public void playerTurn(int action) {
+
         if (gameOver || !player.isAlive() || !enemy.isAlive()) return;
 
         // 🧙‍♂️ Người chơi tấn công trước
@@ -57,7 +58,7 @@ public class PhapSuKhacCheController {
         if (checkEnd()) return;
 
         // 🤖 Sau 1 giây, máy phản công
-        Timer timer = new Timer(1000, e -> {
+        Timer timer = new Timer(3000, e -> {
             if (gameOver || !player.isAlive() || !enemy.isAlive()) return;
 
             int aiAction = pickAIAction();
@@ -68,6 +69,13 @@ public class PhapSuKhacCheController {
         });
         timer.setRepeats(false);
         timer.start();
+        if (player instanceof PhongVuModel)
+            view.animateAttackForPhongVu();
+
+        if (enemy instanceof PhongVuModel)
+            view.animateAttackForPhongVuEnemy();
+
+
     }
 
     // === Máy chọn chiêu ===

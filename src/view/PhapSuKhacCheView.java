@@ -237,6 +237,55 @@ public class PhapSuKhacCheView extends JFrame {
         Image scaled = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         label.setIcon(new ImageIcon(scaled));
     }
+    public void animateAttackForPhongVu() {
+        // Kiểm tra có hình nhân vật người chơi không
+        if (playerImgLabel == null || playerImgLabel.getIcon() == null) return;
+
+        // Ảnh tấn công tạm thời (tư thế tung chiêu)
+        ImageIcon attackIcon = new ImageIcon("src/img/nguoiChoi/PhongVuUserDC.png");
+        Image scaledAttack = attackIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        ImageIcon attackScaledIcon = new ImageIcon(scaledAttack);
+
+        // Lưu lại hình gốc của Phong Vũ
+        ImageIcon oldIcon = new ImageIcon("src/img/nguoiChoi/PhongVuUser.png");
+        Image scaledOld = oldIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        ImageIcon oldScaledIcon = new ImageIcon(scaledOld);
+
+        // Đổi hình sang imggg.png
+        playerImgLabel.setIcon(attackScaledIcon);
+
+        // Sau 2 giây đổi lại hình cũ
+        Timer backTimer = new Timer(1000, e -> {
+            playerImgLabel.setIcon(oldScaledIcon);
+        });
+        backTimer.setRepeats(false);
+        backTimer.start();
+    }
+    public void animateAttackForPhongVuEnemy() {
+        // Kiểm tra có hình nhân vật máy không
+        if (enemyImgLabel == null || enemyImgLabel.getIcon() == null) return;
+
+        // Ảnh tấn công tạm thời của máy (Phong Vũ tung chiêu)
+        ImageIcon attackIcon = new ImageIcon("src/img/may/PhongVuMayDC.png");
+        Image scaledAttack = attackIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        ImageIcon attackScaledIcon = new ImageIcon(scaledAttack);
+
+        // Lưu lại hình gốc của máy (Phong Vũ bình thường)
+        ImageIcon oldIcon = new ImageIcon("src/img/may/PhongVuMay.png");
+        Image scaledOld = oldIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        ImageIcon oldScaledIcon = new ImageIcon(scaledOld);
+
+        // Đổi hình sang tư thế đánh
+        enemyImgLabel.setIcon(attackScaledIcon);
+
+        // Sau 1 giây đổi lại hình cũ
+        Timer backTimer = new Timer(1000, e -> {
+            enemyImgLabel.setIcon(oldScaledIcon);
+        });
+        backTimer.setRepeats(false);
+        backTimer.start();
+    }
+
 
 
 }
