@@ -224,7 +224,7 @@ public class PhapSuKhacCheView extends JFrame {
             icon = new ImageIcon("src/img/Screenshot 2025-10-30 233345.png");
 
         } else if (model instanceof ThuyTamModel) {
-            icon = new ImageIcon("src/img/Screenshot 2025-10-30 235048.png");
+            icon = new ImageIcon("src/img/nguoiChoi/ThuyTamUser.png");
 
         } else {
             // model là Phong Vũ → phân biệt người chơi hay máy
