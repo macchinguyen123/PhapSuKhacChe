@@ -48,62 +48,103 @@ public class PhapSuKhacCheController {
     // === Lượt người chơi ===
     public void playerTurn(int action) {
         if (gameOver || !player.isAlive() || !enemy.isAlive()) return;
-        int aiAction = pickAIAction();
-        String result = executeTurn(player, enemy, action, aiAction);
+
+        // 🧙‍♂️ Người chơi tấn công trước
+        String playerResult = executeSingleAction(player, enemy, action, true);
         view.updateBars(player, enemy);
+        view.updateLog(playerResult);
+
         if (checkEnd()) return;
-        view.updateLog(result);
+
+        // 🤖 Sau 1 giây, máy phản công
+        Timer timer = new Timer(1000, e -> {
+            if (gameOver || !player.isAlive() || !enemy.isAlive()) return;
+
+            int aiAction = pickAIAction();
+            String aiResult = executeSingleAction(enemy, player, aiAction, false);
+            view.updateBars(player, enemy);
+            view.updateLog(playerResult + "<br>" + aiResult);
+            checkEnd();
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
+    // === Máy chọn chiêu ===
     private int pickAIAction() {
-        if (enemy.getMana() < 10) return 5;
-        if (enemy.getHP() < 30 && enemy.getMana() >= 25) return 3;
-        if (!enemy.isUsedSpecial() && enemy.getMana() >= 20) return 6;
-        return rand.nextInt(3);
+        if (enemy.getMana() < 10) return 5;                // Hết mana thì hồi mana
+        if (enemy.getHP() < 30 && enemy.getMana() >= 25) return 3; // Thấp máu thì hồi máu
+        if (!enemy.isUsedSpecial() && enemy.getMana() >= 20) return 6; // Dùng chiêu đặc biệt
+        return rand.nextInt(3); // Ngẫu nhiên giữa lửa, nước, gió
     }
 
-    private String executeTurn(CharacterModel p, CharacterModel e, int pAct, int eAct) {
+    // === Xử lý 1 hành động (đánh 1 chiều) ===
+    private String executeSingleAction(CharacterModel attacker, CharacterModel defender, int action, boolean isPlayer) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Người chơi dùng: ").append(actionName(pAct)).append(" | Máy dùng: ").append(actionName(eAct)).append("\n");
-        if (pAct == 6) p.special(e);
-        if (eAct == 6) e.special(p);
-        applyAction(p, e, pAct, eAct);
-        applyAction(e, p, eAct, pAct);
-        sb.append("➡️ ").append(p.getName()).append(": HP ").append(p.getHP()).append(", Mana ").append(p.getMana()).append("\n");
-        sb.append("➡️ ").append(e.getName()).append(": HP ").append(e.getHP()).append(", Mana ").append(e.getMana()).append("\n");
+
+        if (isPlayer)
+            sb.append("🧙‍♂️ Người chơi dùng ").append(actionName(action)).append("!<br>");
+        else
+            sb.append("🤖 Máy phản công bằng ").append(actionName(action)).append("!<br>");
+
+        // Hiệu ứng phép thuật
+        view.showSkillEffect(action, isPlayer);
+
+        // Thực hiện hành động
+        applyAction(attacker, defender, action);
+
+        sb.append("➡️ ").append(attacker.getName()).append(": HP ").append(attacker.getHP())
+                .append(", Mana ").append(attacker.getMana()).append("<br>");
+        sb.append("➡️ ").append(defender.getName()).append(": HP ").append(defender.getHP())
+                .append(", Mana ").append(defender.getMana()).append("<br>");
+
         return sb.toString();
     }
 
-    private void applyAction(CharacterModel atk, CharacterModel def, int act, int oppAct) {
+    // === Thực thi hành động ===
+    private void applyAction(CharacterModel atk, CharacterModel def, int act) {
         switch (act) {
-            case 0, 1, 2 -> {
+            case 0, 1, 2 -> { // Lửa - Nước - Gió
                 if (atk.getMana() < 10) return;
                 atk.changeMana(-10);
-                view.showSkillEffect(act, atk == player);
                 int dmg = 15;
-                if ((act == 0 && oppAct == 2) || (act == 1 && oppAct == 0) || (act == 2 && oppAct == 1)) dmg = 20;
-                else if (act == oppAct) dmg = 10;
                 def.changeHP(-dmg);
             }
-            case 3 -> { if (atk.getMana() >= 25) { atk.changeMana(-25); atk.changeHP(20); } }
-            case 4 -> { if (atk.getMana() >= 15) atk.changeMana(-15); def.changeHP(-5); }
-            case 5 -> { atk.changeHP(-15); atk.changeMana(25); }
+            case 3 -> { // Hồi máu
+                if (atk.getMana() >= 25) {
+                    atk.changeMana(-25);
+                    atk.changeHP(20);
+                }
+            }
+            case 4 -> { // Phòng thủ
+                if (atk.getMana() >= 15) {
+                    atk.changeMana(-15);
+                    def.changeHP(-5);
+                }
+            }
+            case 5 -> { // Hồi mana
+                atk.changeHP(-15);
+                atk.changeMana(25);
+            }
+            case 6 -> atk.special(def); // Chiêu đặc biệt riêng từng nhân vật
         }
     }
 
+    // === Tên chiêu ===
     private String actionName(int act) {
         return switch (act) {
-            case 0 -> "Lửa";
-            case 1 -> "Nước";
-            case 2 -> "Gió";
-            case 3 -> "Hồi Máu";
-            case 4 -> "Phòng Thủ";
-            case 5 -> "Hồi Mana";
-            case 6 -> "Chiêu Đặc Biệt";
+            case 0 -> "🔥 Lửa";
+            case 1 -> "💧 Nước";
+            case 2 -> "🌪️ Gió";
+            case 3 -> "❤️ Hồi Máu";
+            case 4 -> "🛡️ Phòng Thủ";
+            case 5 -> "✨ Hồi Mana";
+            case 6 -> "💥 Chiêu Đặc Biệt";
             default -> "Không rõ";
         };
     }
 
+    // === Kiểm tra kết thúc trận ===
     private boolean checkEnd() {
         if (!player.isAlive() || !enemy.isAlive()) {
             gameOver = true;
@@ -114,13 +155,11 @@ public class PhapSuKhacCheController {
                 JOptionPane.showMessageDialog(view, "💀 Bạn thua!");
 
             // 🔁 Reset toàn bộ JFrame (giống mở lại game từ đầu)
-            view.dispose(); // đóng cửa sổ hiện tại
+            view.dispose();
             SwingUtilities.invokeLater(() -> new PhapSuKhacCheView().setVisible(true));
 
             return true;
         }
         return false;
     }
-
-
 }
