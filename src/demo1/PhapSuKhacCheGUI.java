@@ -26,10 +26,9 @@ public class PhapSuKhacCheGUI extends JFrame {
         bgLabel = new JLabel(new ImageIcon(bgScaled));
         bgLabel.setBounds(0, 0, 950, 600);
         bgLabel.setLayout(null);
-
         setContentPane(bgLabel);
 
-        showStartScreen(); // Trang khởi đầu
+        showStartScreen();
     }
 
     /** ==================== TRANG KHỞI ĐẦU ==================== */
@@ -45,9 +44,7 @@ public class PhapSuKhacCheGUI extends JFrame {
 
         JButton startBtn = createTransparentButton("▶ BẮT ĐẦU");
         startBtn.setBounds(350, 300, 250, 50);
-        startBtn.addActionListener(e -> {
-            chooseCharacter();
-        });
+        startBtn.addActionListener(e -> chooseCharacter());
         bgLabel.add(startBtn);
 
         JButton exitBtn = createTransparentButton("❌ RỜI KHỎI");
@@ -59,7 +56,6 @@ public class PhapSuKhacCheGUI extends JFrame {
         bgLabel.repaint();
     }
 
-    /** Nút trong suốt, viền trắng, hover vàng */
     private JButton createTransparentButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("Arial", Font.BOLD, 20));
@@ -99,7 +95,6 @@ public class PhapSuKhacCheGUI extends JFrame {
             case 0 -> player = new HoaLongModel();
             case 1 -> player = new ThuyTamModel();
             case 2 -> player = new PhongVuModel();
-            default -> player = new HoaLongModel();
         }
 
         // Máy chọn ngẫu nhiên
@@ -112,7 +107,6 @@ public class PhapSuKhacCheGUI extends JFrame {
 
         JOptionPane.showMessageDialog(this, "👾 Máy chọn: " + enemy.getName());
 
-        // Dọn nền và tạo giao diện trận đấu
         bgLabel.removeAll();
         bgLabel.revalidate();
         bgLabel.repaint();
@@ -122,7 +116,6 @@ public class PhapSuKhacCheGUI extends JFrame {
 
     /** ==================== GIAO DIỆN TRẬN ĐẤU ==================== */
     private void setupUI() {
-        // Ảnh nhân vật
         playerImgLabel = new JLabel();
         playerImgLabel.setBounds(100, 200, 200, 200);
         setCharacterImage(playerImgLabel, player);
@@ -133,7 +126,6 @@ public class PhapSuKhacCheGUI extends JFrame {
         setCharacterImage(enemyImgLabel, enemy);
         bgLabel.add(enemyImgLabel);
 
-        // Tên nhân vật
         JLabel playerLabel = new JLabel(player.getName(), SwingConstants.CENTER);
         playerLabel.setForeground(Color.ORANGE);
         playerLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -146,7 +138,6 @@ public class PhapSuKhacCheGUI extends JFrame {
         enemyLabel.setBounds(600, 30, 300, 30);
         bgLabel.add(enemyLabel);
 
-        // Thanh HP/Mana
         hpBarPlayer = new JProgressBar(0, 100);
         hpBarPlayer.setForeground(Color.RED);
         hpBarPlayer.setBounds(50, 70, 300, 20);
@@ -187,13 +178,12 @@ public class PhapSuKhacCheGUI extends JFrame {
         enemyMana.setBounds(700, 125, 100, 20);
         bgLabel.add(enemyMana);
 
-        // Nút kỹ năng
-        String[] names = {"🔥 Lửa", "💧 Nước", "🌪️ Gió", "❤️ Hồi Máu", "🛡️ Phòng Thủ", "✨ Hồi Mana", "💥 Chiêu Đặc Biệt"};
+        // 5 kỹ năng theo mô tả mới
+        String[] names = {"⚔️ Đánh thường", "🔥 Chiêu 1", "💥 Chiêu 2", "✨ Khắc chế đặc biệt", "❤️ Hồi máu"};
         skillButtons = new JButton[names.length];
-
         for (int i = 0; i < names.length; i++) {
             JButton b = new JButton(names[i]);
-            b.setBounds(40 + (i % 4) * 220, 470 + (i / 4) * 60, 200, 40);
+            b.setBounds(60 + i * 170, 500, 160, 40);
             b.setFont(new Font("Arial", Font.BOLD, 14));
             final int idx = i;
             b.addActionListener(e -> {
@@ -204,117 +194,45 @@ public class PhapSuKhacCheGUI extends JFrame {
             skillButtons[i] = b;
         }
 
-        // Log
         log = new JLabel("Trận đấu bắt đầu!", SwingConstants.CENTER);
         log.setForeground(Color.WHITE);
-        log.setBounds(100, 380, 750, 50);
+        log.setBounds(100, 400, 750, 50);
         log.setFont(new Font("Consolas", Font.PLAIN, 16));
         bgLabel.add(log);
 
         updateBars();
-
-        bgLabel.revalidate();
-        bgLabel.repaint();
     }
 
-    /** ==================== CÁC HÀM PHỤ ==================== */
     private void setCharacterImage(JLabel label, CharacterModel model) {
         ImageIcon icon;
         if (model instanceof HoaLongModel)
-            icon = new ImageIcon("src/img/Screenshot 2025-10-30 233345.png");
+            icon = new ImageIcon("src/img/lua.png");
         else if (model instanceof ThuyTamModel)
-            icon = new ImageIcon("src/img/Screenshot 2025-10-30 235048.png");
+            icon = new ImageIcon("src/img/nuoc.png");
         else
-            icon = new ImageIcon("src/img/Screenshot 2025-10-30 233345.png");
+            icon = new ImageIcon("src/img/gio.png");
 
         Image scaled = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         label.setIcon(new ImageIcon(scaled));
     }
 
-    private void showSkillEffect(String imgPath, JLabel targetLabel) {
-        ImageIcon icon = new ImageIcon(imgPath);
-        Image scaled = icon.getImage().getScaledInstance(targetLabel.getWidth(), targetLabel.getHeight(), Image.SCALE_SMOOTH);
-        JLabel effect = new JLabel(new ImageIcon(scaled));
-        effect.setBounds(targetLabel.getX(), targetLabel.getY(), targetLabel.getWidth(), targetLabel.getHeight());
-        effect.setOpaque(false);
-        bgLabel.add(effect);
-        bgLabel.setComponentZOrder(effect, 0);
-        bgLabel.revalidate();
-        bgLabel.repaint();
-        Timer timer = new Timer(800, e -> {
-            bgLabel.remove(effect);
-            bgLabel.revalidate();
-            bgLabel.repaint();
-        });
-        timer.setRepeats(false);
-        timer.start();
-    }
-
-    // --- phần xử lý lượt đánh giữ nguyên ---
     private void playerTurn(int action) {
         if (!player.isAlive() || !enemy.isAlive()) return;
-        int aiAction = pickAIAction();
+        int aiAction = rand.nextInt(5);
         String result = executeTurn(player, enemy, action, aiAction);
         updateBars();
         if (checkEnd()) return;
         log.setText("<html>" + result.replace("\n", "<br>") + "</html>");
     }
 
-    private int pickAIAction() {
-        if (enemy.getMana() < 10) return 5;
-        if (enemy.getHP() < 30 && enemy.getMana() >= 25) return 3;
-        if (!enemy.usedSpecial && enemy.getMana() >= 20) return 6;
-        return rand.nextInt(3);
-    }
-
     private String executeTurn(CharacterModel p, CharacterModel e, int pAct, int eAct) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Người chơi dùng: ").append(actionName(pAct)).append(" | Máy dùng: ").append(actionName(eAct)).append("\n");
-        if (pAct == 6) p.special(e);
-        if (eAct == 6) e.special(p);
-        applyAction(p, e, pAct, eAct);
-        applyAction(e, p, eAct, pAct);
+        sb.append("Người chơi dùng: ").append(p.actionName(pAct)).append(" | Máy dùng: ").append(e.actionName(eAct)).append("\n");
+        p.useSkill(pAct, e);
+        e.useSkill(eAct, p);
         sb.append("➡️ ").append(p.getName()).append(": HP ").append(p.getHP()).append(", Mana ").append(p.getMana()).append("\n");
         sb.append("➡️ ").append(e.getName()).append(": HP ").append(e.getHP()).append(", Mana ").append(e.getMana()).append("\n");
         return sb.toString();
-    }
-
-    private void applyAction(CharacterModel atk, CharacterModel def, int act, int oppAct) {
-        switch (act) {
-            case 0, 1, 2 -> {
-                if (atk.getMana() < 10) return;
-                atk.changeMana(-10);
-                if (atk == player) {
-                    if (act == 0) showSkillEffect("src/img/lua.png", enemyImgLabel);
-                    else if (act == 1) showSkillEffect("src/img/nuoc.png", enemyImgLabel);
-                    else if (act == 2) showSkillEffect("src/img/gio.png", enemyImgLabel);
-                } else {
-                    if (act == 0) showSkillEffect("src/img/lua.png", playerImgLabel);
-                    else if (act == 1) showSkillEffect("src/img/nuoc.png", playerImgLabel);
-                    else if (act == 2) showSkillEffect("src/img/gio.png", playerImgLabel);
-                }
-                int dmg = 15;
-                if ((act == 0 && oppAct == 2) || (act == 1 && oppAct == 0) || (act == 2 && oppAct == 1)) dmg = 20;
-                else if (act == oppAct) dmg = 10;
-                def.changeHP(-dmg);
-            }
-            case 3 -> { if (atk.getMana() >= 25) { atk.changeMana(-25); atk.changeHP(20); } }
-            case 4 -> { if (atk.getMana() >= 15) atk.changeMana(-15); def.changeHP(-5); }
-            case 5 -> { atk.changeHP(-15); atk.changeMana(25); }
-        }
-    }
-
-    private String actionName(int act) {
-        return switch (act) {
-            case 0 -> "Lửa";
-            case 1 -> "Nước";
-            case 2 -> "Gió";
-            case 3 -> "Hồi Máu";
-            case 4 -> "Phòng Thủ";
-            case 5 -> "Hồi Mana";
-            case 6 -> "Chiêu Đặc Biệt";
-            default -> "Không rõ";
-        };
     }
 
     private void updateBars() {
@@ -345,8 +263,7 @@ public class PhapSuKhacCheGUI extends JFrame {
     }
 }
 
-
-// ------------------- Character Models --------------------
+/* ==================== CHARACTER MODELS ==================== */
 
 abstract class CharacterModel {
     protected String name;
@@ -358,56 +275,79 @@ abstract class CharacterModel {
     public int getMana() { return mana; }
     public boolean isAlive() { return hp > 0; }
 
-    public void changeHP(int amount) {
-        hp = Math.max(0, Math.min(100, hp + amount));
-    }
+    public void changeHP(int amount) { hp = Math.max(0, Math.min(100, hp + amount)); }
+    public void changeMana(int amount) { mana = Math.max(0, Math.min(50, mana + amount)); }
 
-    public void changeMana(int amount) {
-        mana = Math.max(0, Math.min(50, mana + amount));
-    }
+    public abstract void useSkill(int idx, CharacterModel opponent);
 
-    public abstract void special(CharacterModel opponent);
+    public String actionName(int i) {
+        return switch (i) {
+            case 0 -> "Đánh thường";
+            case 1 -> "Chiêu 1";
+            case 2 -> "Chiêu 2";
+            case 3 -> "Khắc chế đặc biệt";
+            case 4 -> "Hồi máu";
+            default -> "???";
+        };
+    }
 }
 
+/* ==================== HOẢ LONG ==================== */
 class HoaLongModel extends CharacterModel {
     public HoaLongModel() { name = "🔥 Hỏa Long"; }
 
     @Override
-    public void special(CharacterModel opponent) {
-        if (usedSpecial || mana < 30) return;
-        usedSpecial = true;
-        changeMana(-30);
-        opponent.changeHP(-40);
-        changeHP(-10);
+    public void useSkill(int idx, CharacterModel o) {
+        switch (idx) {
+            case 0 -> { changeMana(+5); o.changeHP(-10); } // Đánh thường
+            case 1 -> { if (mana >= 10) { changeMana(-10); o.changeHP(-12); } }
+            case 2 -> { if (mana >= 18) { changeMana(-18); o.changeHP(-30); changeHP(-10); } }
+            case 3 -> { if (!usedSpecial && mana >= 20) { usedSpecial = true; changeMana(-20);
+                if (o instanceof PhongVuModel) o.changeHP(-38);
+                else if (o instanceof ThuyTamModel) { o.changeHP(-20); changeHP(+15); changeMana(+5); }
+                else if (o instanceof HoaLongModel) { o.changeHP(-30); changeMana(+10); }
+            }}
+            case 4 -> { if (mana >= 15) { changeMana(-15); changeHP(+25); } }
+        }
     }
 }
 
-class ThuyTamModel extends CharacterModel {
-    public ThuyTamModel() { name = "💧 Thủy Tâm"; }
-
-    @Override
-    public void special(CharacterModel opponent) {
-        if (usedSpecial || mana < 25) return;
-        usedSpecial = true;
-        changeMana(-25);
-        changeHP(10);
-    }
-}
-
+/* ==================== PHONG VŨ ==================== */
 class PhongVuModel extends CharacterModel {
     public PhongVuModel() { name = "🌪️ Phong Vũ"; }
 
     @Override
-    public void special(CharacterModel opponent) {
-        if (usedSpecial || mana < 20) return;
-        usedSpecial = true;
-        changeMana(-20);
-        opponent.changeHP(-15);
-        if (opponent.getMana() >= 10)
-            opponent.changeMana(-10);
-        else {
-            opponent.changeMana(-opponent.getMana());
-            opponent.changeHP(-5);
+    public void useSkill(int idx, CharacterModel o) {
+        switch (idx) {
+            case 0 -> { changeMana(+5); o.changeHP(-10); }
+            case 1 -> { if (mana >= 10) { changeMana(-10); o.changeHP(-14); o.changeMana(-8); } }
+            case 2 -> { if (mana >= 18) { changeMana(-18); o.changeHP(-24); changeHP(+10); } }
+            case 3 -> { if (!usedSpecial && mana >= 20) { usedSpecial = true; changeMana(-20);
+                if (o instanceof HoaLongModel) { o.changeHP(-25); changeHP(+10); }
+                else if (o instanceof ThuyTamModel) { o.changeHP(-15); changeHP(+10); changeMana(+10); }
+                else if (o instanceof PhongVuModel) { o.changeHP(-30); changeMana(+10); }
+            }}
+            case 4 -> { if (mana >= 15) { changeMana(-15); changeHP(+20); } }
+        }
+    }
+}
+
+/* ==================== THỦY TÂM ==================== */
+class ThuyTamModel extends CharacterModel {
+    public ThuyTamModel() { name = "💧 Thủy Tâm"; }
+
+    @Override
+    public void useSkill(int idx, CharacterModel o) {
+        switch (idx) {
+            case 0 -> { changeMana(+5); o.changeHP(-10); }
+            case 1 -> { if (mana >= 10) { changeMana(-10); o.changeHP(-12); changeHP(+10); } }
+            case 2 -> { if (mana >= 18) { changeMana(-18); o.changeHP(-22); changeMana(+8); } }
+            case 3 -> { if (!usedSpecial && mana >= 20) { usedSpecial = true; changeMana(-20);
+                if (o instanceof HoaLongModel) changeHP(Math.min(50, +50));
+                else if (o instanceof PhongVuModel) o.changeHP(-5);
+                else if (o instanceof ThuyTamModel) { changeMana(50 - mana); changeHP(-10); }
+            }}
+            case 4 -> { if (mana >= 15) { changeMana(-15); changeHP(+20); } }
         }
     }
 }
