@@ -95,11 +95,11 @@ public class GameFrame extends JFrame {
         bgLabel.add(playerImgLabel);
         bgLabel.add(enemyImgLabel);
 
-        // thanh máu - mana
-        hpBarPlayer = createBar(Color.RED, 50, 70);
-        manaBarPlayer = createBar(Color.BLUE, 50, 100);
-        hpBarEnemy = createBar(Color.RED, 600, 70);
-        manaBarEnemy = createBar(Color.BLUE, 600, 100);
+        // === Thanh máu - mana ===
+        hpBarPlayer = createBar(Color.RED, 50, 70, 100);
+        manaBarPlayer = createBar(new Color(30, 144, 255), 50, 100, 50);
+        hpBarEnemy = createBar(Color.RED, 600, 70, 100);
+        manaBarEnemy = createBar(new Color(0, 191, 255), 600, 100, 50);
         bgLabel.add(hpBarPlayer);
         bgLabel.add(manaBarPlayer);
         bgLabel.add(hpBarEnemy);
@@ -136,11 +136,12 @@ public class GameFrame extends JFrame {
     }
 
     /** Tạo progress bar máu/mana */
-    private JProgressBar createBar(Color color, int x, int y) {
-        JProgressBar bar = new JProgressBar(0, 100);
+    private JProgressBar createBar(Color color, int x, int y, int max) {
+        JProgressBar bar = new JProgressBar(0, max);
         bar.setBounds(x, y, 300, 20);
         bar.setForeground(color);
         bar.setBackground(Color.DARK_GRAY);
+        bar.setValue(max);
         return bar;
     }
 
@@ -168,14 +169,20 @@ public class GameFrame extends JFrame {
 
     /** Cập nhật chỉ số HP/Mana */
     public void updateBars(Mage player, Mage enemy) {
-        hpBarPlayer.setValue(player.getHp());
-        manaBarPlayer.setValue(player.getMana());
-        hpBarEnemy.setValue(enemy.getHp());
-        manaBarEnemy.setValue(enemy.getMana());
-        playerHP.setText("HP: " + player.getHp());
-        playerMana.setText("Mana: " + player.getMana());
-        enemyHP.setText("HP: " + enemy.getHp());
-        enemyMana.setText("Mana: " + enemy.getMana());
+        int playerHp = Math.min(player.getHp(), 100);
+        int playerMana = Math.min(player.getMana(), 50);
+        int enemyHp = Math.min(enemy.getHp(), 100);
+        int enemyMana = Math.min(enemy.getMana(), 50);
+
+        hpBarPlayer.setValue(playerHp);
+        manaBarPlayer.setValue(playerMana);
+        hpBarEnemy.setValue(enemyHp);
+        manaBarEnemy.setValue(enemyMana);
+
+        this.playerHP.setText("HP: " + playerHp);
+        this.playerMana.setText("Mana: " + playerMana);
+        this.enemyHP.setText("HP: " + enemyHp);
+        this.enemyMana.setText("Mana: " + enemyMana);
     }
 
     /** Cập nhật log diễn biến */
@@ -223,7 +230,7 @@ public class GameFrame extends JFrame {
     private ImageIcon getMageImage(Mage mage, boolean isPlayer) {
         String path;
         if (mage instanceof HoaLong) {
-            path = "src/img/nguoiChoi/HoaLongUser.png";
+            path = "src/img/Screenshot 2025-10-30 233345.png";
         } else if (mage instanceof PhongVu) {
             path = isPlayer ? "src/img/nguoiChoi/PhongVuUser.png" : "src/img/may/PhongVuMay.png";
         } else {

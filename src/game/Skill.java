@@ -50,4 +50,21 @@ public class Skill {
     public int getManaCost() {
         return manaCost;
     }
+    // Trong class Skill (thêm các getter)
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getHeal() {
+        return heal;
+    }
+
+    public int getManaGain() {
+        return manaGain;
+    }
+
+    public boolean isSpecial() {
+        return isSpecial;
+    }
+
 }

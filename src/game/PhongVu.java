@@ -41,12 +41,13 @@ public class PhongVu extends Mage {
             // Khắc chế Thuỷ → phản 15 dmg + hồi 10 mana
             target.takeDamage(15);
             regainMana(10);
+            heal(20);
             System.out.println("Khắc chế Thuỷ Tâm! Gây 15 sát thương và hồi 10 mana.");
         }
         else if (target instanceof PhongVu) {
             // Gặp cùng hệ → gây 30 dmg + hồi 10 mana
-            target.takeDamage(30);
-            regainMana(10);
+            target.takeDamage(30);//gây 30 st lên đối thủ
+            regainMana(10); //cộng 10 mana vào bản thân
             System.out.println("Gặp cùng hệ Phong! Gây 30 sát thương và hồi 10 mana.");
         }
         else {
