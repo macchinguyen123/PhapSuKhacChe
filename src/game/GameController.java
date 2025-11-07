@@ -72,7 +72,7 @@ public class GameController {
         if (isGameOver) return;
 
         // Máy phản công sau 1 giây
-        Timer t = new Timer(1000, e -> {
+        Timer t = new Timer(3000, e -> {
             enemyTurn();
             frame.updateBars(player.mage, enemy.mage);
         });
