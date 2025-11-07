@@ -221,7 +221,7 @@ public class PhapSuKhacCheView extends JFrame {
         ImageIcon icon;
 
         if (model instanceof HoaLongModel) {
-            icon = new ImageIcon("src/img/Screenshot 2025-10-30 233345.png");
+            icon = new ImageIcon("src/img/HoaLong.png");
 
         } else if (model instanceof ThuyTamModel) {
             icon = new ImageIcon("src/img/nguoiChoi/ThuyTamUser.png");

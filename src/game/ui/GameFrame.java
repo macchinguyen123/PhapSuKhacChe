@@ -13,7 +13,7 @@ public class GameFrame extends JFrame {
     private JPanel skillPanel;
 
     public GameFrame() {
-        setTitle("⚔️ Pháp Sư Khắc Chế");
+        setTitle("⚔️ Pháp Sư Nguyên Tố");
         setSize(950, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -36,7 +36,7 @@ public class GameFrame extends JFrame {
         bgLabel.removeAll();
         bgLabel.repaint();
 
-        JLabel title = new JLabel("⚔️ PHÁP SƯ KHẮC CHẾ ⚔️", SwingConstants.CENTER);
+        JLabel title = new JLabel("⚔️ PHÁP SƯ Nguyên Tố ⚔️", SwingConstants.CENTER);
         title.setForeground(new Color(255, 215, 0));
         title.setFont(new Font("Serif", Font.BOLD, 42));
         title.setBounds(100, 150, 750, 80);
@@ -83,6 +83,7 @@ public class GameFrame extends JFrame {
 
     /** Khởi tạo giao diện trận đấu */
     public void setupBattle(Mage player, Mage enemy) {
+        setBackground("src/img/img.png");   // Nền chiến đấu
         bgLabel.removeAll();
 
         // ảnh nhân vật
@@ -230,7 +231,7 @@ public class GameFrame extends JFrame {
     private ImageIcon getMageImage(Mage mage, boolean isPlayer) {
         String path;
         if (mage instanceof HoaLong) {
-            path = "src/img/Screenshot 2025-10-30 233345.png";
+            path = "src/img/HoaLong.png";
         } else if (mage instanceof PhongVu) {
             path = isPlayer ? "src/img/nguoiChoi/PhongVuUser.png" : "src/img/may/PhongVuMay.png";
         } else {
@@ -240,4 +241,76 @@ public class GameFrame extends JFrame {
         Image scaled = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
     }
+
+    /** Màn hình chọn nhân vật bằng hình ảnh */
+    public void showCharacterSelect(boolean selectingPlayer) {
+        setBackground("src/img/bg1.png");   // Nền chọn nhân vật
+        bgLabel.removeAll();
+        bgLabel.repaint();
+
+        JLabel title = new JLabel(
+                selectingPlayer ? "✨ Chọn pháp sư của bạn" : "⚔️ Chọn pháp sư cho đối thủ",
+                SwingConstants.CENTER
+        );
+        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Serif", Font.BOLD, 32));
+        title.setBounds(100, 40, 750, 60);
+        bgLabel.add(title);
+
+        // Panel chứa các lựa chọn nhân vật
+        JPanel panel = new JPanel(new GridLayout(1, 3, 40, 10));
+        panel.setOpaque(false);
+        panel.setBounds(100, 150, 750, 300);
+        bgLabel.add(panel);
+
+        addCharacterOption(panel, "Hoả Long", "src/img/HoaLong.png", selectingPlayer);
+        addCharacterOption(panel, "Phong Vũ", "src/img/nguoiChoi/PhongVuUser.png", selectingPlayer);
+        addCharacterOption(panel, "Thuỷ Tâm", "src/img/nguoiChoi/ThuyTamUser.png", selectingPlayer);
+
+        bgLabel.revalidate();
+        bgLabel.repaint();
+    }
+
+    /** Thêm 1 lựa chọn nhân vật vào màn hình select */
+    private void addCharacterOption(JPanel panel, String name, String imgPath, boolean selectingPlayer) {
+        ImageIcon icon = new ImageIcon(imgPath);
+        Image scaled = icon.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(scaled);
+
+        JButton btn = new JButton(name, icon);
+        btn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btn.setHorizontalTextPosition(SwingConstants.CENTER);
+        btn.setFont(new Font("Arial", Font.BOLD, 16));
+        btn.setForeground(Color.WHITE);
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+
+        // Khi nhấn chọn
+        btn.addActionListener(e -> {
+            Mage chosen;
+            switch (name) {
+                case "Hoả Long" -> chosen = new HoaLong();
+                case "Phong Vũ" -> chosen = new PhongVu();
+                default -> chosen = new ThuyTam();
+            }
+
+            if (selectingPlayer) {
+                controller.setPlayerMage(chosen);
+                showCharacterSelect(false); // Chuyển sang chọn kẻ địch
+            } else {
+                controller.setEnemyMage(chosen);
+                controller.finishCharacterSelect(); // Bắt đầu game
+            }
+        });
+
+        panel.add(btn);
+    }
+
+    private void setBackground(String path) {
+        ImageIcon bgIcon = new ImageIcon(path);
+        Image bgScaled = bgIcon.getImage().getScaledInstance(950, 600, Image.SCALE_SMOOTH);
+        bgLabel.setIcon(new ImageIcon(bgScaled));
+    }
+
 }

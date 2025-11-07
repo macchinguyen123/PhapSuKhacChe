@@ -2,6 +2,7 @@ package game;
 
 import game.ui.GameFrame;
 import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 public class GameController {
@@ -10,43 +11,41 @@ public class GameController {
     private TurnManager turnManager;
     private boolean isGameOver = false;
     private final GameFrame frame;
+    private Mage selectedPlayerMage, selectedEnemyMage;
+
+    public void setPlayerMage(Mage m) {
+        selectedPlayerMage = m;
+    }
+
+    public void setEnemyMage(Mage m) {
+        selectedEnemyMage = m;
+    }
+
+    public void finishCharacterSelect() {
+        player = new Player();
+        player.mage = selectedPlayerMage;
+
+        enemy = new Enemy();
+        enemy.mage = selectedEnemyMage;
+
+        turnManager = new TurnManager();
+
+        frame.setupBattle(player.mage, enemy.mage);
+        frame.updateLog("🔰 Trận đấu giữa "
+                + player.mage.getName() + " và " + enemy.mage.getName() + " bắt đầu!");
+    }
+
 
     public GameController(GameFrame frame) {
         this.frame = frame;
     }
 
+
     /** Khởi tạo game */
     public void startGame() {
-        player = new Player();
-        enemy = new Enemy();
-        turnManager = new TurnManager();
-
-        // Người chơi chọn pháp sư
-        Object[] options = {"🔥 Hoả Long", "💨 Phong Vũ", "💧 Thuỷ Tâm"};
-        int choice = JOptionPane.showOptionDialog(null,
-                "Chọn pháp sư của bạn", "Chọn nhân vật",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, options, options[0]);
-
-        switch (choice) {
-            case 0 -> player.mage = new HoaLong();
-            case 1 -> player.mage = new PhongVu();
-            case 2 -> player.mage = new ThuyTam();
-            default -> player.mage = new HoaLong();
-        }
-
-        // Máy chọn ngẫu nhiên
-        int rand = new Random().nextInt(3);
-        enemy.mage = switch (rand) {
-            case 0 -> new HoaLong();
-            case 1 -> new PhongVu();
-            default -> new ThuyTam();
-        };
-
-        // Hiển thị giao diện trận đấu
-        frame.setupBattle(player.mage, enemy.mage);
-        frame.updateLog("🔰 Trận đấu giữa " + player.mage.getName() + " và " + enemy.mage.getName() + " bắt đầu!");
+        frame.showCharacterSelect(true);  // bắt đầu chọn nhân vật
     }
+
 
     /** Khi người chơi chọn skill */
     public void playerUseSkill(Skill skill) {
