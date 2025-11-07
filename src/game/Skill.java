@@ -26,12 +26,16 @@ public class Skill {
             System.out.println("⚠️ Không đủ mana để dùng chiêu này!");
             return;
         }
-
-        user.useMana(manaCost);
-
         if (damage > 0) target.takeDamage(damage);
-        if (heal > 0) user.heal(heal);
+
+        // ⚡️ Cho phép heal âm để trừ HP người dùng
+        if (heal != 0) {
+            if (heal > 0) user.heal(heal);
+            else user.takeDamage(-heal); // nếu heal âm → trừ HP
+        }
+
         if (manaGain > 0) user.regainMana(manaGain);
+
 
         System.out.println(user.getName() + " dùng chiêu " + name + " lên " + target.getName());
 
