@@ -1,14 +1,12 @@
-package game;
+package controller;
 
-import game.ui.GameFrame;
+import model.*;
+import view.GameFrame;
 import javax.swing.*;
-import java.awt.*;
-import java.util.Random;
 
 public class GameController {
     private Player player;
     private Enemy enemy;
-    private TurnManager turnManager;
     private boolean isGameOver = false;
     private final GameFrame frame;
     private Mage selectedPlayerMage, selectedEnemyMage;
@@ -28,7 +26,6 @@ public class GameController {
         enemy = new Enemy();
         enemy.mage = selectedEnemyMage;
 
-        turnManager = new TurnManager();
 
         frame.setupBattle(player.mage, enemy.mage);
         frame.updateLog("🔰 Trận đấu giữa "
@@ -58,7 +55,7 @@ public class GameController {
         }
 
         // Tấn công
-        player.mage.attack(enemy.mage, skill, turnManager);
+        player.mage.attack(enemy.mage, skill);
         frame.updateLog("👤 " + player.mage.getName() + " dùng " + skill.getName() + "!");
         frame.showSkillEffect(getSkillType(player.mage), true);
         frame.updateBars(player.mage, enemy.mage);
@@ -83,7 +80,8 @@ public class GameController {
     private void enemyTurn() {
         if (isGameOver) return;
 
-        Skill skill = enemy.chooseSkill();
+        // Dùng Minimax thực với trạng thái Player
+        Skill skill = enemy.chooseSkill(player.mage);
 
         // Nếu không có chiêu nào đủ mana
         if (skill == null || enemy.mage.getMana() < skill.getManaCost()) {
@@ -94,7 +92,7 @@ public class GameController {
         }
 
         // Tấn công
-        enemy.mage.attack(player.mage, skill, turnManager);
+        enemy.mage.attack(player.mage, skill);
         frame.updateLog("🤖 " + enemy.mage.getName() + " dùng " + skill.getName() + "!");
         frame.showSkillEffect(getSkillType(enemy.mage), false);
 

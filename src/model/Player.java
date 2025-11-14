@@ -1,4 +1,4 @@
-package game;
+package model;
 
 import java.util.List;
 import java.util.Scanner;

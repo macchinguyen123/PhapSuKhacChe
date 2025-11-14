@@ -1,4 +1,4 @@
-package game;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ public abstract class Mage {
     protected int hp;
     protected int mana;
     protected List<Skill> skills;
-    protected boolean specialUsed; // ✅ chiêu số 5 chỉ dùng 1 lần
+    protected boolean specialUsed;
 
     public Mage(String name) {
         this.name = name;
@@ -35,19 +35,19 @@ public abstract class Mage {
     // ===== Kiểm tra chiêu có thể dùng không =====
     public boolean canUseSkill(Skill skill) {
         int index = skills.indexOf(skill);
-        if (index == 4 && specialUsed) return false; // ✅ chiêu 5 chỉ dùng 1 lần
+        if (index == 4 && specialUsed) return false; // chiêu 5 chỉ dùng 1 lần
         return mana >= skill.getManaCost();
     }
 
-    // ===== Hành động tấn công =====
-    public void attack(Mage target, Skill skill, TurnManager tm) {
+    // ===== Tấn công (KHÔNG TurnManager) =====
+    public void attack(Mage target, Skill skill) {
         if (!canUseSkill(skill)) {
             System.out.println("❌ " + name + " không thể dùng " + skill.getName() + "!");
             return;
         }
 
         useMana(skill.getManaCost());
-        skill.execute(this, target, tm);
+        skill.execute(this, target); // KHÔNG còn TM
 
         // nếu là chiêu số 5 → đánh dấu đã dùng
         int index = skills.indexOf(skill);
@@ -62,7 +62,7 @@ public abstract class Mage {
         System.out.println("💢 " + name + " mất " + amount + " HP (còn lại: " + hp + ")");
     }
 
-    // ===== Hồi phục HP =====
+    // ===== Hồi HP =====
     public void heal(int amount) {
         hp = Math.min(100, hp + amount);
         System.out.println("💖 " + name + " hồi " + amount + " HP (hiện tại: " + hp + ")");
@@ -74,7 +74,7 @@ public abstract class Mage {
         System.out.println("💧 " + name + " mất " + amount + " mana (còn lại: " + mana + ")");
     }
 
-    // ===== Sử dụng mana =====
+    // ===== Dùng mana =====
     public void useMana(int amount) {
         mana = Math.max(0, mana - amount);
     }
@@ -85,18 +85,17 @@ public abstract class Mage {
         System.out.println("🔮 " + name + " hồi " + amount + " mana (hiện tại: " + mana + ")");
     }
 
-    // ===== Kiểm tra còn sống =====
+    // ===== Kiểm tra sống =====
     public boolean isAlive() {
         return hp > 0;
     }
 
-    // ===== Chiêu đặc biệt (ghi đè ở từng subclass) =====
+    // ===== Chiêu đặc biệt =====
     public abstract void useSpecial(Mage target);
 
-    // ===== Hỗ trợ kỹ năng đặc biệt có hiệu ứng riêng =====
+    // ===== Hỗ trợ cast skill không TM =====
     public void attackWithSkill(Mage target, Skill skill) {
-        TurnManager dummyTM = null;
-        attack(target, skill, dummyTM);
+        attack(target, skill);
     }
 
     @Override
