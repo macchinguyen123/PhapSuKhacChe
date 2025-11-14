@@ -1,4 +1,4 @@
-package game;
+package model;
 
 public class ThuyTam extends Mage {
 
@@ -18,15 +18,11 @@ public class ThuyTam extends Mage {
         skills.add(new Skill("Hồi Thủy", 15, 0, 20, 0, false, "Hồi 20 HP"));
 
         // 5) Chiêu đặc biệt — 20 mana
-        skills.add(new Skill("Tuyệt Kỹ Thủy Tâm", 20, 0, 0, 0, true, "Chiêu đặc biệt, khắc chế Hỏa"));
+        skills.add(new Skill("Tuyệt Kỹ Thủy Tâm", 20, 0, 0, 0, true, "Chiêu đặc biệt, khắc chế từng hệ"));
     }
 
     @Override
     public void useSpecial(Mage target) {
-        useSpecial(target, null);
-    }
-
-    public void useSpecial(Mage target, TurnManager tm) {
         if (specialUsed) {
             System.out.println("Chiêu đặc biệt đã dùng rồi!");
             return;
@@ -37,30 +33,28 @@ public class ThuyTam extends Mage {
 
         if (target instanceof HoaLong) {
             // Khắc chế Hỏa → hồi gấp đôi sát thương lẽ ra nhận, tối đa 50 HP
-            int healAmount = Math.min(50, 40); // Giới hạn tối đa 50 HP
+            int healAmount = Math.min(50, 40);
             heal(healAmount);
             System.out.println("Khắc chế Hỏa Long! Hồi " + healAmount + " HP (tối đa 50).");
-        }
-        else if (target instanceof PhongVu) {
-            // Khắc chế Gió → đối thủ mất lượt kế + 5 sát thương
-            target.takeDamage(5);
-            if (tm != null) {
-                tm.skipTurn("Enemy");
-                System.out.println("Khắc chế Phong Vũ! Gây 5 sát thương và khiến đối thủ mất lượt kế!");
-            } else {
-                System.out.println("Khắc chế Phong Vũ! Gây 5 sát thương.");
-            }
-        }
-        else if (target instanceof ThuyTam) {
+        } else if (target instanceof PhongVu) {
+            // Gây 10 dmg
+            target.takeDamage(10);
+
+            // Hút tối đa 10 mana
+            int manaSteal = Math.min(10, target.getMana());
+
+            target.loseMana(manaSteal);
+            this.regainMana(manaSteal);
+
+            System.out.println(
+                    "Khắc chế Phong Vũ! Gây 10 sát thương, hút "
+                            + manaSteal + " mana và chuyển cho Thủy Tâm."
+            );
+        } else if (target instanceof ThuyTam) {
             // Gặp cùng hệ → hồi full mana, nhưng mất 10 HP
             regainMana(100);
             takeDamage(10);
             System.out.println("Gặp cùng hệ Thủy Tâm! Hồi full mana nhưng mất 10 HP.");
-        }
-        else {
-            // Đối thủ khác (mặc định)
-            target.takeDamage(25);
-            System.out.println("Gây 25 sát thương thường.");
         }
     }
 }

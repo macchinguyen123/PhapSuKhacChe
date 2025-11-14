@@ -1,4 +1,4 @@
-package game;
+package model;
 
 public class Skill {
     private String name;
@@ -21,7 +21,7 @@ public class Skill {
 
     public String getName() { return name; }
 
-    public void execute(Mage user, Mage target, TurnManager turnManager) {
+    public void execute(Mage user, Mage target) {
         if (user.getMana() < manaCost) {
             System.out.println("⚠️ Không đủ mana để dùng chiêu này!");
             return;
@@ -42,7 +42,7 @@ public class Skill {
         if (isSpecial) {
             if (user instanceof HoaLong) ((HoaLong) user).useSpecial(target);
             else if (user instanceof PhongVu) ((PhongVu) user).useSpecial(target);
-            else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target, turnManager);
+            else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target);
         }
     }
 
