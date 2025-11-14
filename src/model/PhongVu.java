@@ -56,15 +56,4 @@ public class PhongVu extends Mage {
             System.out.println("Gây 30 sát thương thường.");
         }
     }
-
-    @Override
-    public void attackWithSkill(Mage target, Skill skill) {
-        super.attackWithSkill(target, skill);
-
-        // Hiệu ứng riêng của chiêu Cơn Lốc (làm đối thủ mất 8 mana)
-        if (skill.getName().equals("Cơn Lốc")) {
-            target.loseMana(8);
-            System.out.println(target.getName() + " bị mất 8 mana do chiêu Cơn Lốc!");
-        }
-    }
 }
