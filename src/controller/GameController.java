@@ -67,8 +67,8 @@ public class GameController {
         checkWinLose();
         if (isGameOver) return;
 
-        // Máy phản công sau 1 giây
-        Timer t = new Timer(3000, e -> {
+        // Máy phản công sau 5 giây
+        Timer t = new Timer(5000, e -> {
             enemyTurn();
             frame.updateBars(player.mage, enemy.mage);
         });

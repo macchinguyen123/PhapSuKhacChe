@@ -23,12 +23,12 @@ public class Skill {
 
     public void execute(Mage user, Mage target) {
         if (user.getMana() < manaCost) {
-            System.out.println("⚠️ Không đủ mana để dùng chiêu này!");
+            System.out.println(" Không đủ mana để dùng chiêu này!");
             return;
         }
         if (damage > 0) target.takeDamage(damage);
 
-        // ⚡️ Cho phép heal âm để trừ HP người dùng
+        // Cho phép heal âm để trừ HP người dùng
         if (heal != 0) {
             if (heal > 0) user.heal(heal);
             else user.takeDamage(-heal); // nếu heal âm → trừ HP
@@ -36,7 +36,11 @@ public class Skill {
 
         if (manaGain > 0) user.regainMana(manaGain);
 
-
+        // Hiệu ứng riêng cho chiêu “Cơn Lốc”
+        if (user instanceof PhongVu && name.equals("Cơn Lốc")) {
+            target.loseMana(8);
+            System.out.println(target.getName() + " bị mất 8 mana do chiêu Cơn Lốc!");
+        }
         System.out.println(user.getName() + " dùng chiêu " + name + " lên " + target.getName());
 
         if (isSpecial) {

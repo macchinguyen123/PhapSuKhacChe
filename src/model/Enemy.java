@@ -24,7 +24,7 @@ public class Enemy {
         return usable.get(rnd.nextInt(usable.size()));
     }
 
-    // Nếu có đối thủ thì cũng chỉ random (bỏ minimax)
+    // Nếu có đối thủ thì cũng chỉ random
     public Skill chooseSkill(Mage opponent) {
         List<Skill> skills = mage.getSkills();
 

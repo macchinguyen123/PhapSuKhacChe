@@ -19,10 +19,21 @@ public abstract class Mage {
     }
 
     // ===== Getter =====
-    public String getName() { return name; }
-    public int getHp() { return hp; }
-    public int getMana() { return mana; }
-    public List<Skill> getSkills() { return skills; }
+    public String getName() {
+        return name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getMana() {
+        return mana;
+    }
+
+    public List<Skill> getSkills() {
+        return skills;
+    }
 
     // ===== Giới hạn chỉ số =====
     public void limitStats() {
@@ -39,7 +50,7 @@ public abstract class Mage {
         return mana >= skill.getManaCost();
     }
 
-    // ===== Tấn công (KHÔNG TurnManager) =====
+    // ===== Tấn công =====
     public void attack(Mage target, Skill skill) {
         if (!canUseSkill(skill)) {
             System.out.println("❌ " + name + " không thể dùng " + skill.getName() + "!");
@@ -47,7 +58,7 @@ public abstract class Mage {
         }
 
         useMana(skill.getManaCost());
-        skill.execute(this, target); // KHÔNG còn TM
+        skill.execute(this, target);
 
         // nếu là chiêu số 5 → đánh dấu đã dùng
         int index = skills.indexOf(skill);
@@ -92,11 +103,6 @@ public abstract class Mage {
 
     // ===== Chiêu đặc biệt =====
     public abstract void useSpecial(Mage target);
-
-    // ===== Hỗ trợ cast skill không TM =====
-    public void attackWithSkill(Mage target, Skill skill) {
-        attack(target, skill);
-    }
 
     @Override
     public String toString() {
