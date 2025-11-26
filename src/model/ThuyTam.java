@@ -27,34 +27,35 @@ public class ThuyTam extends Mage {
             System.out.println("Chiêu đặc biệt đã dùng rồi!");
             return;
         }
+
+        if (mana < 20) {
+            System.out.println("Không đủ mana để dùng chiêu đặc biệt!");
+            return;
+        }
+
         specialUsed = true;
+
+        // Trừ mana bản thân đúng chuẩn
+        int manaCost = Math.min(20, mana);
+        useMana(manaCost);
+        System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
 
         System.out.println(name + " dùng chiêu đặc biệt 🌊 Tuyệt Kỹ Thủy Tâm!");
 
         if (target instanceof HoaLong) {
-            // Khắc chế Hỏa → hồi gấp đôi sát thương lẽ ra nhận, tối đa 50 HP
-            int healAmount = Math.min(50, 40);
+            int healAmount = Math.min(50, 20 * 2); // ví dụ hồi gấp đôi sát thương
             heal(healAmount);
             System.out.println("Khắc chế Hỏa Long! Hồi " + healAmount + " HP (tối đa 50).");
         } else if (target instanceof PhongVu) {
-            // Gây 10 dmg
+            target.useMana(Math.min(10, target.getMana())); // trừ mana đối thủ chuẩn
+            regainMana(Math.min(10, target.getMana()));     // hồi mana cho bản thân
             target.takeDamage(10);
-
-            // Hút tối đa 10 mana
-            int manaSteal = Math.min(10, target.getMana());
-
-            target.loseMana(manaSteal);
-            this.regainMana(manaSteal);
-
-            System.out.println(
-                    "Khắc chế Phong Vũ! Gây 10 sát thương, hút "
-                            + manaSteal + " mana và chuyển cho Thủy Tâm."
-            );
+            System.out.println("Khắc chế Phong Vũ! Gây 10 sát thương, hút 10 mana và chuyển cho Thủy Tâm.");
         } else if (target instanceof ThuyTam) {
-            // Gặp cùng hệ → hồi full mana, nhưng mất 10 HP
-            regainMana(100);
+            regainMana(50);  // hồi mana cho bản thân
             takeDamage(10);
             System.out.println("Gặp cùng hệ Thủy Tâm! Hồi full mana nhưng mất 10 HP.");
         }
     }
+
 }

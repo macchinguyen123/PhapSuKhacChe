@@ -19,46 +19,14 @@ public class Skill {
         this.description = description;
     }
 
-    public String getName() { return name; }
-
-    public void execute(Mage user, Mage target) {
-        if (user.getMana() < manaCost) {
-            System.out.println(" Không đủ mana để dùng chiêu này!");
-            return;
-        }
-        if (damage > 0) target.takeDamage(damage);
-
-        // Cho phép heal âm để trừ HP người dùng
-        if (heal != 0) {
-            if (heal > 0) user.heal(heal);
-            else user.takeDamage(-heal); // nếu heal âm → trừ HP
-        }
-
-        if (manaGain > 0) user.regainMana(manaGain);
-
-        // Hiệu ứng riêng cho chiêu “Cơn Lốc”
-        if (user instanceof PhongVu && name.equals("Cơn Lốc")) {
-            target.loseMana(8);
-            System.out.println(target.getName() + " bị mất 8 mana do chiêu Cơn Lốc!");
-        }
-        System.out.println(user.getName() + " dùng chiêu " + name + " lên " + target.getName());
-
-        if (isSpecial) {
-            if (user instanceof HoaLong) ((HoaLong) user).useSpecial(target);
-            else if (user instanceof PhongVu) ((PhongVu) user).useSpecial(target);
-            else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return name + " (Mana: " + manaCost + ", DMG: " + damage + ", Heal: " + heal + ")";
+    public String getName() {
+        return name;
     }
 
     public int getManaCost() {
         return manaCost;
     }
-    // Trong class Skill (thêm các getter)
+
     public int getDamage() {
         return damage;
     }
@@ -75,4 +43,81 @@ public class Skill {
         return isSpecial;
     }
 
+    // --- Phương thức use mở cho override anonymous ---
+    public void use(Mage user, Mage target, Mage actualPlayer, Mage actualEnemy) {
+        execute(user, target, actualPlayer, actualEnemy);
+    }
+
+    public void execute(Mage user, Mage target, Mage actualPlayer, Mage actualEnemy) {
+        // Kiểm tra mana
+        if (user.getMana() < manaCost) {
+            System.out.println("⚠️ " + user.getName() + " không đủ mana dùng " + name + "!");
+            return;
+        }
+
+        // Lưu giá trị trước khi dùng skill để log
+        int userHpBefore = user.getHp();
+        int targetHpBefore = target.getHp();
+        int userManaBefore = user.getMana();
+        int targetManaBefore = target.getMana();
+
+        // --- Trừ mana của user ---
+        user.useMana(manaCost);
+
+        // --- DAMAGE ---
+        if (damage > 0) target.takeDamage(damage);
+
+        // --- HEAL ---
+        if (heal != 0) {
+            if (heal > 0) user.heal(heal);
+            else user.takeDamage(-heal);
+        }
+
+        // --- MANA GAIN cho user ---
+        if (manaGain > 0) user.regainMana(manaGain);
+
+        // --- Skill override anonymous (ví dụ Cơn Lốc) ---
+        int targetManaLost = 0;
+        if (user instanceof PhongVu && name.equals("Cơn Lốc")) {
+            targetManaLost = Math.min(8, target.getMana());
+            target.useMana(targetManaLost); // trực tiếp trừ mana đối thủ
+        }
+
+        // --- Các skill đặc biệt ---
+        if (isSpecial) {
+            if (user instanceof HoaLong) ((HoaLong) user).useSpecial(target);
+            else if (user instanceof PhongVu) ((PhongVu) user).useSpecial(target);
+            else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target);
+        }
+
+        int userHpChange = user.getHp() - userHpBefore;
+        int targetHpChange = targetHpBefore - target.getHp(); // Gây sát thương dương
+        int userManaChange = user.getMana() - userManaBefore;
+        int targetManaChange = targetManaBefore - target.getMana(); // Mana mất dương
+
+        System.out.println("\n===== TỔNG KẾT LƯỢT =====");
+        System.out.println(user.getName() + " dùng chiêu: " + name);
+        System.out.println("Gây sát thương: " + targetHpChange); // luôn dương
+        System.out.println("Hồi HP: " + Math.max(userHpChange,0));
+        System.out.println("Tốn mana: " + (manaCost));
+        System.out.println("Hồi mana: " + Math.max(userManaChange,0));
+        if (targetManaChange != 0)
+            System.out.println("Đối thủ mất mana: " + targetManaChange);
+
+        // --- Trạng thái hiện tại chính xác ---
+        System.out.println("\n--- Trạng thái hiện tại ---");
+        System.out.println("Bạn    - HP: " + actualPlayer.getHp() + " | Mana: " + actualPlayer.getMana());
+        System.out.println("Đối thủ - HP: " + actualEnemy.getHp() + " | Mana: " + actualEnemy.getMana());
+        System.out.println("===========================\n");
+
+        // --- Giới hạn max/min HP và mana ---
+        user.limitStats();
+        target.limitStats();
+    }
+
+
+    @Override
+    public String toString() {
+        return name + " (Mana: " + manaCost + ", DMG: " + damage + ", Heal: " + heal + ")";
+    }
 }

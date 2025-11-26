@@ -21,7 +21,7 @@ public class GameFrame extends JFrame {
         setLayout(null);
 
         // nền
-        ImageIcon bgIcon = new ImageIcon("src/img/img.png");
+        ImageIcon bgIcon = new ImageIcon("src/img/background.png");
         Image bgScaled = bgIcon.getImage().getScaledInstance(950, 600, Image.SCALE_SMOOTH);
         bgLabel = new JLabel(new ImageIcon(bgScaled));
         bgLabel.setBounds(0, 0, 950, 600);
@@ -37,21 +37,13 @@ public class GameFrame extends JFrame {
         bgLabel.removeAll();
         bgLabel.repaint();
 
-        JLabel title = new JLabel("⚔️ PHÁP SƯ Nguyên Tố ⚔️", SwingConstants.CENTER);
-        title.setForeground(new Color(255, 215, 0));
-        title.setFont(new Font("Serif", Font.BOLD, 42));
-        title.setBounds(100, 150, 750, 80);
-        bgLabel.add(title);
 
-        JButton startBtn = createTransparentButton("▶ BẮT ĐẦU");
-        startBtn.setBounds(350, 300, 250, 50);
+        JButton startBtn = createTransparentButton("BẮT ĐẦU");
+        startBtn.setBounds(345, 487, 260, 50);
         startBtn.addActionListener(e -> controller.startGame());
         bgLabel.add(startBtn);
 
-        JButton exitBtn = createTransparentButton("❌ RỜI KHỎI");
-        exitBtn.setBounds(350, 380, 250, 50);
-        exitBtn.addActionListener(e -> System.exit(0));
-        bgLabel.add(exitBtn);
+
 
         bgLabel.revalidate();
         bgLabel.repaint();

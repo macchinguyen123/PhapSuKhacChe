@@ -28,29 +28,35 @@ public class HoaLong extends Mage {
             System.out.println("Chiêu đặc biệt đã dùng rồi!");
             return;
         }
+
+        if (mana < 20) {
+            System.out.println("Không đủ mana để dùng chiêu đặc biệt!");
+            return;
+        }
+
         specialUsed = true;
+
+        // Trừ mana bản thân và log
+        int manaCost = Math.min(20, mana);
+        useMana(manaCost);
+        System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
 
         System.out.println(name + " dùng chiêu đặc biệt Long Viêm Trảm!");
 
         if (target instanceof PhongVu) {
-            // Khắc chế mạnh Gió
             target.takeDamage(38);
             System.out.println("Khắc chế Gió! Gây 38 sát thương.");
         } else if (target instanceof ThuyTam) {
-            // Khắc chế yếu hơn Thuỷ
             target.takeDamage(20);
             heal(15);
             regainMana(5);
             System.out.println("Khắc chế Thuỷ! Gây 20 sát thương, hồi 15 HP và 5 mana.");
         } else if (target instanceof HoaLong) {
-            // Gặp cùng hệ
             target.takeDamage(30);
             regainMana(10);
             System.out.println("Gặp cùng hệ Hỏa! Gây 30 sát thương và hồi 10 mana.");
-        } else {
-            // Đối thủ khác (mặc định)
-            target.takeDamage(30);
-            System.out.println("Gây 30 sát thương thường.");
         }
     }
+
+
 }
