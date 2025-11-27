@@ -3,6 +3,7 @@ package controller;
 import model.*;
 import view.GameFrame;
 import javax.swing.*;
+import java.awt.*;
 
 public class GameController {
     private Player player;
@@ -10,6 +11,10 @@ public class GameController {
     private boolean isGameOver = false;
     private final GameFrame frame;
     private Mage selectedPlayerMage, selectedEnemyMage;
+
+    public GameController(GameFrame frame) {
+        this.frame = frame;
+    }
 
     public void setPlayerMage(Mage m) {
         selectedPlayerMage = m;
@@ -20,29 +25,17 @@ public class GameController {
     }
 
     public void finishCharacterSelect() {
-        player = new Player();
-        player.mage = selectedPlayerMage;
-
-        enemy = new Enemy();
-        enemy.mage = selectedEnemyMage;
-
+        player = new Player(selectedPlayerMage);
+        enemy = new Enemy(selectedEnemyMage);
 
         frame.setupBattle(player.mage, enemy.mage);
         frame.updateLog("🔰 Trận đấu giữa "
                 + player.mage.getName() + " và " + enemy.mage.getName() + " bắt đầu!");
     }
 
-
-    public GameController(GameFrame frame) {
-        this.frame = frame;
-    }
-
-
-    /** Khởi tạo game */
     public void startGame() {
-        frame.showCharacterSelect(true);  // bắt đầu chọn nhân vật
+        frame.showCharacterSelect(true);
     }
-
 
     /** Khi người chơi chọn skill */
     public void playerUseSkill(Skill skill) {
@@ -54,52 +47,23 @@ public class GameController {
             return;
         }
 
-        // Tấn công
-        player.mage.attack(enemy.mage, skill);
-        frame.updateLog("👤 " + player.mage.getName() + " dùng " + skill.getName() + "!");
+        // Player dùng skill
+        player.useSkill(skill, enemy);
         frame.showSkillEffect(getSkillType(player.mage), true);
-        frame.updateBars(player.mage, enemy.mage);
 
-        // Giới hạn HP & Mana
-        player.mage.limitStats();
-        enemy.mage.limitStats();
-
-        checkWinLose();
-        if (isGameOver) return;
-
-        // Máy phản công sau 5 giây
-        Timer t = new Timer(5000, e -> {
-            enemyTurn();
-            frame.updateBars(player.mage, enemy.mage);
-        });
-        t.setRepeats(false);
-        t.start();
-    }
-
-    /** Lượt của máy */
-    private void enemyTurn() {
-        if (isGameOver) return;
-
-        // Dùng Minimax thực với trạng thái Player
-        Skill skill = enemy.chooseSkill(player.mage);
-
-        // Nếu không có chiêu nào đủ mana
-        if (skill == null || enemy.mage.getMana() < skill.getManaCost()) {
-            frame.updateLog("🤖 " + enemy.mage.getName() + " không đủ mana, nghỉ lượt và hồi lại 5 mana.");
-            enemy.mage.regainMana(5);
-            enemy.mage.limitStats();
-            return;
+        // Enemy phản công ngay lượt đó
+        Skill enemySkill = enemy.chooseSkill(player.mage);
+        if (enemySkill != null) {
+            enemy.useSkill(enemySkill, player);
+            frame.showSkillEffect(getSkillType(enemy.mage), false);
         }
 
-        // Tấn công
-        enemy.mage.attack(player.mage, skill);
-        frame.updateLog("🤖 " + enemy.mage.getName() + " dùng " + skill.getName() + "!");
-        frame.showSkillEffect(getSkillType(enemy.mage), false);
-
-        // Giới hạn HP & Mana
+        // Cập nhật thanh HP/Mana
         player.mage.limitStats();
         enemy.mage.limitStats();
+        frame.updateBars(player.mage, enemy.mage);
 
+        // Kiểm tra thắng thua
         checkWinLose();
     }
 
@@ -114,7 +78,7 @@ public class GameController {
         }
     }
 
-    /** Xác định hiệu ứng (ảnh kỹ năng) */
+    /** Xác định hiệu ứng skill */
     private int getSkillType(Mage mage) {
         if (mage instanceof HoaLong) return 0; // lửa
         if (mage instanceof ThuyTam) return 1; // nước

@@ -19,21 +19,10 @@ public abstract class Mage {
     }
 
     // ===== Getter =====
-    public String getName() {
-        return name;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public int getMana() {
-        return mana;
-    }
-
-    public List<Skill> getSkills() {
-        return skills;
-    }
+    public String getName() { return name; }
+    public int getHp() { return hp; }
+    public int getMana() { return mana; }
+    public List<Skill> getSkills() { return skills; }
 
     // ===== Giới hạn chỉ số =====
     public void limitStats() {
@@ -46,66 +35,46 @@ public abstract class Mage {
     // ===== Kiểm tra chiêu có thể dùng không =====
     public boolean canUseSkill(Skill skill) {
         int index = skills.indexOf(skill);
-        if (index == 4 && specialUsed) return false; // chiêu 5 chỉ dùng 1 lần
+        if (index == 4 && specialUsed) return false; // chiêu đặc biệt chỉ dùng 1 lần
         return mana >= skill.getManaCost();
     }
 
-    // ===== Tấn công =====
-    public void attack(Mage target, Skill skill) {
+    // ===== Dùng skill chuẩn =====
+    // Sử dụng cùng Skill.execute(user, target, playerMage, enemyMage)
+    public void useSkill(Skill skill, Mage target) {
         if (!canUseSkill(skill)) {
             System.out.println("❌ " + name + " không thể dùng " + skill.getName() + "!");
             return;
         }
 
-        useMana(skill.getManaCost());
-        skill.execute(this, target);
-
-        // nếu là chiêu số 5 → đánh dấu đã dùng
+        // Chiêu đặc biệt đánh dấu
         int index = skills.indexOf(skill);
         if (index == 4) specialUsed = true;
 
+        skill.execute(this, target, this, target); // dùng 4 tham số để log chính xác
+
         limitStats();
+        target.limitStats();
     }
 
     // ===== Nhận sát thương =====
-    public void takeDamage(int amount) {
-        hp = Math.max(0, hp - amount);
-        System.out.println("💢 " + name + " mất " + amount + " HP (còn lại: " + hp + ")");
-    }
+    public void takeDamage(int amount) { hp = Math.max(0, hp - amount); }
 
     // ===== Hồi HP =====
-    public void heal(int amount) {
-        hp = Math.min(100, hp + amount);
-        System.out.println("💖 " + name + " hồi " + amount + " HP (hiện tại: " + hp + ")");
-    }
-
-    // ===== Mất mana =====
-    public void loseMana(int amount) {
-        mana = Math.max(0, mana - amount);
-        System.out.println("💧 " + name + " mất " + amount + " mana (còn lại: " + mana + ")");
-    }
+    public void heal(int amount) { hp = Math.min(100, hp + amount); }
 
     // ===== Dùng mana =====
-    public void useMana(int amount) {
-        mana = Math.max(0, mana - amount);
-    }
+    public void useMana(int amount) { mana = Math.max(0, mana - amount); }
 
     // ===== Hồi mana =====
-    public void regainMana(int amount) {
-        mana = Math.min(50, mana + amount);
-        System.out.println("🔮 " + name + " hồi " + amount + " mana (hiện tại: " + mana + ")");
-    }
+    public void regainMana(int amount) { mana = Math.min(50, mana + amount); }
 
     // ===== Kiểm tra sống =====
-    public boolean isAlive() {
-        return hp > 0;
-    }
+    public boolean isAlive() { return hp > 0; }
 
     // ===== Chiêu đặc biệt =====
     public abstract void useSpecial(Mage target);
 
     @Override
-    public String toString() {
-        return name + " (HP: " + hp + ", Mana: " + mana + ")";
-    }
+    public String toString() { return name + " (HP: " + hp + ", Mana: " + mana + ")"; }
 }
