@@ -2,6 +2,7 @@ package view;
 
 import controller.GameController;
 import model.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,31 +33,65 @@ public class GameFrame extends JFrame {
         showStartScreen();
     }
 
-    /** ==================== TRANG KHỞI ĐẦU ==================== */
+    /**
+     * ==================== TRANG KHỞI ĐẦU ====================
+     */
     public void showStartScreen() {
         bgLabel.removeAll();
         bgLabel.repaint();
 
 
         JButton startBtn = createTransparentButton("BẮT ĐẦU");
-        startBtn.setBounds(345, 487, 260, 50);
+        startBtn.setBounds(305, 418, 305, 48);
+
+// Chữ màu đen
+        startBtn.setForeground(Color.BLACK);
+
+// Viền màu đen
+        startBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+
+// Nền trong suốt (như bạn muốn)
+        startBtn.setContentAreaFilled(false);
+        startBtn.setOpaque(false);
+
+// Action
         startBtn.addActionListener(e -> controller.startGame());
+
+// Add vào background
         bgLabel.add(startBtn);
 
+
+        ImageIcon icon = new ImageIcon("src/img/exit.png");
+        Image scaled = icon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(scaled);
+
+        JButton exitBtn = new JButton(icon);
+        exitBtn.setBounds(900 - 35, 10, 35, 35); // Góc phải trên
+        exitBtn.setContentAreaFilled(false);
+        exitBtn.setBorder(null);
+        exitBtn.setFocusPainted(false);
+        exitBtn.setOpaque(false);
+
+        exitBtn.addActionListener(e -> controller.exit());
+
+        bgLabel.add(exitBtn);
+        bgLabel.setComponentZOrder(exitBtn, 0); // nằm trên cùng
 
 
         bgLabel.revalidate();
         bgLabel.repaint();
     }
 
-    /** Nút trong suốt, viền trắng, hover vàng */
+    /**
+     * Nút trong suốt, viền trắng, hover vàng
+     */
     private JButton createTransparentButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("Arial", Font.BOLD, 20));
-        btn.setForeground(Color.WHITE);
+        btn.setForeground(Color.BLACK);
         btn.setFocusPainted(false);
         btn.setContentAreaFilled(false);
-        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        btn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         btn.setOpaque(false);
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -66,15 +101,18 @@ public class GameFrame extends JFrame {
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn.setForeground(Color.WHITE);
-                btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+                btn.setForeground(Color.BLACK);
+                btn.setBackground(Color.BLUE);
+                btn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             }
         });
 
         return btn;
     }
 
-    /** Khởi tạo giao diện trận đấu */
+    /**
+     * Khởi tạo giao diện trận đấu
+     */
     public void setupBattle(Mage player, Mage enemy) {
         setBackground("src/img/img.png");   // Nền chiến đấu
         bgLabel.removeAll();
@@ -129,7 +167,9 @@ public class GameFrame extends JFrame {
         bgLabel.repaint();
     }
 
-    /** Tạo progress bar máu/mana */
+    /**
+     * Tạo progress bar máu/mana
+     */
     private JProgressBar createBar(Color color, int x, int y, int max) {
         JProgressBar bar = new JProgressBar(0, max);
         bar.setBounds(x, y, 300, 20);
@@ -147,7 +187,9 @@ public class GameFrame extends JFrame {
         return label;
     }
 
-    /** Hiển thị danh sách kỹ năng */
+    /**
+     * Hiển thị danh sách kỹ năng
+     */
     public void showSkills(Mage mage) {
         skillPanel.removeAll();
         for (Skill s : mage.getSkills()) {
@@ -161,7 +203,9 @@ public class GameFrame extends JFrame {
         skillPanel.repaint();
     }
 
-    /** Cập nhật chỉ số HP/Mana */
+    /**
+     * Cập nhật chỉ số HP/Mana
+     */
     public void updateBars(Mage player, Mage enemy) {
         int playerHp = Math.min(player.getHp(), 100);
         int playerMana = Math.min(player.getMana(), 50);
@@ -179,12 +223,16 @@ public class GameFrame extends JFrame {
         this.enemyMana.setText("Mana: " + enemyMana);
     }
 
-    /** Cập nhật log diễn biến */
+    /**
+     * Cập nhật log diễn biến
+     */
     public void updateLog(String text) {
         log.setText("<html>" + text.replace("\n", "<br>") + "</html>");
     }
 
-    /** Hiển thị hiệu ứng skill đơn giản */
+    /**
+     * Hiển thị hiệu ứng skill đơn giản
+     */
     public void showSkillEffect(int type, boolean isPlayer) {
         String imgPath = switch (type) {
             case 0 -> "src/img/lua.png";
@@ -214,13 +262,17 @@ public class GameFrame extends JFrame {
         timer.start();
     }
 
-    /** Kết thúc game */
+    /**
+     * Kết thúc game
+     */
     public void showEnd(String result) {
         JOptionPane.showMessageDialog(this, result);
         System.exit(0);
     }
 
-    /** Lấy ảnh nhân vật */
+    /**
+     * Lấy ảnh nhân vật
+     */
     private ImageIcon getMageImage(Mage mage, boolean isPlayer) {
         String path;
         if (mage instanceof HoaLong) {
@@ -235,25 +287,47 @@ public class GameFrame extends JFrame {
         return new ImageIcon(scaled);
     }
 
-    /** Màn hình chọn nhân vật bằng hình ảnh */
+    /**
+     * Màn hình chọn nhân vật bằng hình ảnh
+     */
     public void showCharacterSelect(boolean selectingPlayer) {
-        setBackground("src/img/bg1.png");   // Nền chọn nhân vật
+        // Đặt nền
+        setBackground("src/img/option.png");
+
+        // Xóa giao diện cũ
         bgLabel.removeAll();
         bgLabel.repaint();
 
+        // --- NÚT QUAY LẠI ---
+        ImageIcon backIcon = new ImageIcon("src/img/muiten.png");
+        Image backScaled = backIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        backIcon = new ImageIcon(backScaled);
+
+        JButton backBtn = new JButton(backIcon);
+        backBtn.setBounds(5, 5, 40, 40);
+        backBtn.setContentAreaFilled(false);
+        backBtn.setBorder(null);
+        backBtn.setFocusPainted(false);
+        backBtn.setOpaque(false);
+        backBtn.addActionListener(e -> showStartScreen());
+
+        bgLabel.add(backBtn);
+        bgLabel.setComponentZOrder(backBtn, 0); // Đảm bảo nằm trên cùng
+
+        // --- TIÊU ĐỀ ---
         JLabel title = new JLabel(
                 selectingPlayer ? "✨ Chọn pháp sư của bạn" : "⚔️ Chọn pháp sư cho đối thủ",
                 SwingConstants.CENTER
         );
-        title.setForeground(Color.WHITE);
+        title.setForeground(Color.BLACK);
         title.setFont(new Font("Serif", Font.BOLD, 32));
         title.setBounds(100, 40, 750, 60);
         bgLabel.add(title);
 
-        // Panel chứa các lựa chọn nhân vật
+        // --- PANEL CHỌN NHÂN VẬT ---
         JPanel panel = new JPanel(new GridLayout(1, 3, 40, 10));
         panel.setOpaque(false);
-        panel.setBounds(100, 150, 750, 300);
+        panel.setBounds(100, 120, 750, 300);
         bgLabel.add(panel);
 
         addCharacterOption(panel, "Hoả Long", "src/img/HoaLong.png", selectingPlayer);
@@ -264,20 +338,29 @@ public class GameFrame extends JFrame {
         bgLabel.repaint();
     }
 
-    /** Thêm 1 lựa chọn nhân vật vào màn hình select */
+    /**
+     * Thêm 1 lựa chọn nhân vật vào màn hình select
+     */
     private void addCharacterOption(JPanel panel, String name, String imgPath, boolean selectingPlayer) {
         ImageIcon icon = new ImageIcon(imgPath);
-        Image scaled = icon.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH);
+        Image scaled = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         icon = new ImageIcon(scaled);
 
         JButton btn = new JButton(name, icon);
         btn.setVerticalTextPosition(SwingConstants.BOTTOM);
         btn.setHorizontalTextPosition(SwingConstants.CENTER);
         btn.setFont(new Font("Arial", Font.BOLD, 16));
-        btn.setForeground(Color.WHITE);
+
+        // Làm nút trong suốt hoàn toàn
         btn.setOpaque(false);
         btn.setContentAreaFilled(false);
-        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setBorder(null);
+
+        // Tắt hiệu ứng hover xanh
+        btn.setRolloverEnabled(false);
+        btn.setIconTextGap(60);
 
         // Khi nhấn chọn
         btn.addActionListener(e -> {
@@ -290,15 +373,16 @@ public class GameFrame extends JFrame {
 
             if (selectingPlayer) {
                 controller.setPlayerMage(chosen);
-                showCharacterSelect(false); // Chuyển sang chọn kẻ địch
+                showCharacterSelect(false);
             } else {
                 controller.setEnemyMage(chosen);
-                controller.finishCharacterSelect(); // Bắt đầu game
+                controller.finishCharacterSelect();
             }
         });
 
         panel.add(btn);
     }
+
 
     private void setBackground(String path) {
         ImageIcon bgIcon = new ImageIcon(path);
