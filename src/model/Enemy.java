@@ -26,4 +26,22 @@ public class Enemy {
             System.out.println("🤖 " + mage.getName() + " không đủ mana, hồi 5 mana.");
         }
     }
+
+    public double heuristic(Mage player) {
+        Mage enemy = this.mage;
+        double score = 0;
+
+        // HP
+        score += (enemy.getHp() - player.getHp()) * 2.0;
+
+        // Mana
+        score += (enemy.getMana() - player.getMana()) * 0.5;
+
+        // Special skill availability
+        if (!enemy.specialUsed) score += 5;
+        if (!player.specialUsed) score -= 3;
+
+        return score;
+    }
+
 }

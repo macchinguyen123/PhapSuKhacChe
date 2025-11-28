@@ -37,6 +37,10 @@ public class GameController {
         frame.showCharacterSelect(true);
     }
 
+    public void exit(){
+        System.exit(0);
+    }
+
     /** Khi người chơi chọn skill */
     public void playerUseSkill(Skill skill) {
         if (isGameOver) return;
@@ -84,4 +88,6 @@ public class GameController {
         if (mage instanceof ThuyTam) return 1; // nước
         return 2; // gió
     }
+
+
 }
