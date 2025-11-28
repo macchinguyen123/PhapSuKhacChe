@@ -37,11 +37,10 @@ public class Enemy {
         // Mana
         score += (enemy.getMana() - player.getMana()) * 0.5;
 
-        // Special skill availability
+        // chiêu đặc biệt
         if (!enemy.specialUsed) score += 5;
         if (!player.specialUsed) score -= 3;
 
         return score;
     }
-
 }

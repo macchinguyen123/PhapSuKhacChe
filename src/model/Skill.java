@@ -8,6 +8,8 @@ public class Skill {
     private int manaGain;
     private String description;
     private boolean isSpecial;
+    // mới: ảnh hiệu ứng
+    private String effectImg;
 
     public Skill(String name, int manaCost, int damage, int heal, int manaGain, boolean isSpecial, String description) {
         this.name = name;
@@ -17,6 +19,7 @@ public class Skill {
         this.manaGain = manaGain;
         this.isSpecial = isSpecial;
         this.description = description;
+        this.effectImg = null; // default
     }
 
     public String getName() {
@@ -113,6 +116,13 @@ public class Skill {
         // --- Giới hạn max/min HP và mana ---
         user.limitStats();
         target.limitStats();
+    }
+    public void setEffectImg(String path) {
+        this.effectImg = path;
+    }
+
+    public String getEffectImg() {
+        return effectImg;
     }
 
 

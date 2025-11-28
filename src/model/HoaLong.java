@@ -9,10 +9,14 @@ public class HoaLong extends Mage {
         skills.add(new Skill("Đánh Thường", 0, 10, 0, 5, false, "Tấn công cơ bản, hồi 5 mana"));
 
         // 2) Lửa Thánh — 10 mana — gây 12 sát thương
-        skills.add(new Skill("Lửa Thánh", 10, 12, 0, 0, false, "Sát thương ổn định"));
+        Skill luaThanh = new Skill("Lửa Thánh", 10, 12, 0, 0, false, "Sát thương ổn định");
+        luaThanh.setEffectImg("src/img/hoaLong/luaThanh.png");
+        skills.add(luaThanh);
 
         // 3) Hỏa Bạo — 18 mana — gây 30 sát thương và tự mất 10HP
-        skills.add(new Skill("Hỏa Bạo", 18, 30, -10, 0, false, "Gây sát thương mạnh, tự mất 10 HP"));
+        Skill hoaBao = new Skill("Hỏa Bạo", 18, 30, -10, 0, false, "Gây sát thương mạnh, tự mất 10 HP");
+        hoaBao.setEffectImg("src/img/hoaLong/hoaBao.png");
+        skills.add(hoaBao);
 
         // 4) Hồi HP — 15 mana — hồi 25 HP
         skills.add(new Skill("Hồi Phục", 15, 0, 25, 0, false, "Hồi 25 HP"));

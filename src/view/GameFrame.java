@@ -233,14 +233,9 @@ public class GameFrame extends JFrame {
     /**
      * Hiển thị hiệu ứng skill đơn giản
      */
-    public void showSkillEffect(int type, boolean isPlayer) {
-        String imgPath = switch (type) {
-            case 0 -> "src/img/lua.png";
-            case 1 -> "src/img/nuoc.png";
-            case 2 -> "src/img/gio.png";
-            default -> null;
-        };
-        if (imgPath == null) return;
+    public void showSkillEffect(Skill skill, boolean isPlayer) {
+        String imgPath = skill.getEffectImg();
+        if (imgPath == null) return; // không có hiệu ứng thì thôi
 
         JLabel target = isPlayer ? enemyImgLabel : playerImgLabel;
         ImageIcon icon = new ImageIcon(imgPath);
@@ -261,6 +256,7 @@ public class GameFrame extends JFrame {
         timer.setRepeats(false);
         timer.start();
     }
+
 
     /**
      * Kết thúc game
@@ -390,4 +386,13 @@ public class GameFrame extends JFrame {
         bgLabel.setIcon(new ImageIcon(bgScaled));
     }
 
+    public void enableSkillButtons(boolean enable) {
+        if (skillPanel == null) return;
+
+        for (Component c : skillPanel.getComponents()) {
+            if (c instanceof JButton btn) {
+                btn.setEnabled(enable);
+            }
+        }
+    }
 }
