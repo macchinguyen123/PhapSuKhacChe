@@ -87,6 +87,57 @@ public class PhongVu extends Mage {
             System.out.println("Gặp cùng hệ Phong! Gây 30 sát thương và hồi 10 mana.");
         }
     }
+    public void useSpecialSample(Mage target) {
+        if (specialUsed) {
+//            System.out.println("Chiêu đặc biệt đã dùng rồi!");
+            return;
+        }
+
+        if (mana < 20) {
+//            System.out.println("Không đủ mana để dùng chiêu đặc biệt!");
+            return;
+        }
+
+        specialUsed = true;
+
+        // Trừ mana bản thân và log
+        int manaCost = Math.min(20, mana);
+        useMana(manaCost);
+//        System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
+
+//        System.out.println(name + " dùng chiêu đặc biệt Phong Thần Kích!");
+
+        if (target instanceof HoaLong) {
+            target.takeDamage(25);
+            heal(10);
+//            System.out.println("Khắc chế Hỏa Long! Phản lại 25 sát thương và hồi 10 HP.");
+        }
+        else if (target instanceof ThuyTam) {
+            target.takeDamage(15);
+            regainMana(10);
+            heal(20);
+//            System.out.println("Khắc chế Thuỷ Tâm! Phản 15 sát thương, hồi 20 HP và 10 mana.");
+        }
+        else if (target instanceof PhongVu) {
+            target.takeDamage(30);
+            regainMana(10);
+//            System.out.println("Gặp cùng hệ Phong! Gây 30 sát thương và hồi 10 mana.");
+        }
+    }
+
+    @Override
+    public Mage cloneMage() {
+        PhongVu m = new PhongVu();
+
+        m.hp = this.hp;
+        m.mana = this.mana;
+        m.specialUsed = this.specialUsed;
+
+        // Skills dùng chung nên không cần clone sâu
+        m.skills = this.skills;
+
+        return m;
+    }
 
 
 }

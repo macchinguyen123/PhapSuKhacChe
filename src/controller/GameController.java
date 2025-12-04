@@ -102,7 +102,7 @@ public class GameController {
     private void enemyTurn() {
         if (isGameOver) return;
 
-        Skill enemySkill = enemy.chooseSkill(player.mage);
+        Skill enemySkill = enemy.chooseSkillMinimax(player.mage);
 
         if (enemySkill != null) {
             enemy.useSkill(enemySkill, player);
