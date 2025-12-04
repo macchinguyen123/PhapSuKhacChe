@@ -57,5 +57,54 @@ public class ThuyTam extends Mage {
             System.out.println("Gặp cùng hệ Thủy Tâm! Hồi full mana nhưng mất 10 HP.");
         }
     }
+    public void useSpecialSample(Mage target) {
+        if (specialUsed) {
+//            System.out.println("Chiêu đặc biệt đã dùng rồi!");
+            return;
+        }
+
+        if (mana < 20) {
+//            System.out.println("Không đủ mana để dùng chiêu đặc biệt!");
+            return;
+        }
+
+        specialUsed = true;
+
+        // Trừ mana bản thân đúng chuẩn
+        int manaCost = Math.min(20, mana);
+        useMana(manaCost);
+//        System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
+
+//        System.out.println(name + " dùng chiêu đặc biệt 🌊 Tuyệt Kỹ Thủy Tâm!");
+
+        if (target instanceof HoaLong) {
+            int healAmount = Math.min(50, 20 * 2); // ví dụ hồi gấp đôi sát thương
+            heal(healAmount);
+//            System.out.println("Khắc chế Hỏa Long! Hồi " + healAmount + " HP (tối đa 50).");
+        } else if (target instanceof PhongVu) {
+            target.useMana(Math.min(10, target.getMana())); // trừ mana đối thủ chuẩn
+            regainMana(Math.min(10, target.getMana()));     // hồi mana cho bản thân
+            target.takeDamage(10);
+//            System.out.println("Khắc chế Phong Vũ! Gây 10 sát thương, hút 10 mana và chuyển cho Thủy Tâm.");
+        } else if (target instanceof ThuyTam) {
+            regainMana(50);  // hồi mana cho bản thân
+            takeDamage(10);
+//            System.out.println("Gặp cùng hệ Thủy Tâm! Hồi full mana nhưng mất 10 HP.");
+        }
+    }
+
+    @Override
+    public Mage cloneMage() {
+        ThuyTam m = new ThuyTam();
+
+        m.hp = this.hp;
+        m.mana = this.mana;
+        m.specialUsed = this.specialUsed;
+
+        // Skills dùng chung nên không cần clone sâu
+        m.skills = this.skills;
+
+        return m;
+    }
 
 }

@@ -117,6 +117,72 @@ public class Skill {
         user.limitStats();
         target.limitStats();
     }
+    public void executeSample(Mage user, Mage target, Mage actualPlayer, Mage actualEnemy) {
+        // Kiểm tra mana
+        if (user.getMana() < manaCost) {
+//            System.out.println("⚠️ " + user.getName() + " không đủ mana dùng " + name + "!");
+            return;
+        }
+
+        // Lưu giá trị trước khi dùng skill để log
+        int userHpBefore = user.getHp();
+        int targetHpBefore = target.getHp();
+        int userManaBefore = user.getMana();
+        int targetManaBefore = target.getMana();
+
+        // --- Trừ mana của user ---
+        user.useMana(manaCost);
+
+        // --- DAMAGE ---
+        if (damage > 0) target.takeDamage(damage);
+
+        // --- HEAL ---
+        if (heal != 0) {
+            if (heal > 0) user.heal(heal);
+            else user.takeDamage(-heal);
+        }
+
+        // --- MANA GAIN cho user ---
+        if (manaGain > 0) user.regainMana(manaGain);
+
+        // --- Skill override anonymous (ví dụ Cơn Lốc) ---
+        int targetManaLost = 0;
+        if (user instanceof PhongVu && name.equals("Cơn Lốc")) {
+            targetManaLost = Math.min(8, target.getMana());
+            target.useMana(targetManaLost); // trực tiếp trừ mana đối thủ
+        }
+
+        // --- Các skill đặc biệt ---
+        if (isSpecial) {
+            if (user instanceof HoaLong) ((HoaLong) user).useSpecialSample(target);
+            else if (user instanceof PhongVu) ((PhongVu) user).useSpecialSample(target);
+            else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecialSample(target);
+        }
+
+        int userHpChange = user.getHp() - userHpBefore;
+        int targetHpChange = targetHpBefore - target.getHp(); // Gây sát thương dương
+        int userManaChange = user.getMana() - userManaBefore;
+        int targetManaChange = targetManaBefore - target.getMana(); // Mana mất dương
+
+//        System.out.println("\n===== TỔNG KẾT LƯỢT =====");
+//        System.out.println(user.getName() + " dùng chiêu: " + name);
+//        System.out.println("Gây sát thương: " + targetHpChange); // luôn dương
+//        System.out.println("Hồi HP: " + Math.max(userHpChange,0));
+//        System.out.println("Tốn mana: " + (manaCost));
+//        System.out.println("Hồi mana: " + Math.max(userManaChange,0));
+        if (targetManaChange != 0)
+//            System.out.println("Đối thủ mất mana: " + targetManaChange);
+
+        // --- Trạng thái hiện tại chính xác ---
+//        System.out.println("\n--- Trạng thái hiện tại ---");
+//        System.out.println("Bạn    - HP: " + actualPlayer.getHp() + " | Mana: " + actualPlayer.getMana());
+//        System.out.println("Đối thủ - HP: " + actualEnemy.getHp() + " | Mana: " + actualEnemy.getMana());
+//        System.out.println("===========================\n");
+
+        // --- Giới hạn max/min HP và mana ---
+        user.limitStats();
+        target.limitStats();
+    }
     public void setEffectImg(String path) {
         this.effectImg = path;
     }
