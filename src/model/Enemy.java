@@ -95,7 +95,7 @@ public class Enemy {
                 //Đệ quy xuống tầng dưới (lượt Player)
                 double eval = minimax(false, e, p, depth - 1);
 
-                //Máy chọn giá trị lớn nhất, eval càng lớn càng có lợi
+                //Máy chọn giá trị lớn nhất, đánh giá càng lớn càng có lợi
                 if (eval > best) {
                     best = eval;
 

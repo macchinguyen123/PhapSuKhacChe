@@ -59,11 +59,12 @@ public class GameController {
 
         // Khóa nút skill
         frame.enableSkillButtons(false);
-        isPlayerTurn = false;   // ❗ KHÓA LƯỢT NGƯỜI CHƠI
+        isPlayerTurn = false;   // KHÓA LƯỢT NGƯỜI CHƠI
 
         // Player dùng skill
         player.useSkill(skill, enemy);
-        frame.showSkillEffect(skill, true);
+        boolean targetIsEnemy = !skill.isTargetSelf();
+        frame.showSkillEffect(skill, targetIsEnemy);
         frame.updateBars(player.mage, enemy.mage);
 
         frame.updateLog("✨ Bạn dùng " + skill.getName() + "! Chờ máy tấn công...");
@@ -74,7 +75,7 @@ public class GameController {
         }
 
         // 5s sau máy đánh
-        javax.swing.Timer delay = new javax.swing.Timer(5000, null);
+        javax.swing.Timer delay = new javax.swing.Timer(3000, null);
         delay.addActionListener(e -> {
             enemyTurn();
             delay.stop();  // dừng ngay sau khi chạy
@@ -106,7 +107,12 @@ public class GameController {
 
         if (enemySkill != null) {
             enemy.useSkill(enemySkill, player);
-            frame.showSkillEffect(enemySkill, false);
+            // TRUE = hiệu ứng lên enemyMage
+            // FALSE = hiệu ứng lên playerMage
+            boolean targetIsEnemy = enemySkill.isTargetSelf();
+
+            frame.showSkillEffect(enemySkill, targetIsEnemy);
+            frame.showSkillEffect(enemySkill, targetIsEnemy);
             frame.updateLog("⚔️ Máy dùng " + enemySkill.getName() + "!");
         } else {
             frame.updateLog("❗ Máy không đủ mana để dùng skill!");

@@ -8,10 +8,12 @@ public class Skill {
     private int manaGain;
     private String description;
     private boolean isSpecial;
-    // mới: ảnh hiệu ứng
+    // ảnh hiệu ứng
     private String effectImg;
+    private boolean targetSelf;
 
-    public Skill(String name, int manaCost, int damage, int heal, int manaGain, boolean isSpecial, String description) {
+
+    public Skill(String name, int manaCost, int damage, int heal, int manaGain, boolean isSpecial, String description, boolean targetSelf) {
         this.name = name;
         this.manaCost = manaCost;
         this.damage = damage;
@@ -20,6 +22,7 @@ public class Skill {
         this.isSpecial = isSpecial;
         this.description = description;
         this.effectImg = null; // default
+        this.targetSelf = targetSelf;
     }
 
     public String getName() {
@@ -196,4 +199,15 @@ public class Skill {
     public String toString() {
         return name + " (Mana: " + manaCost + ", DMG: " + damage + ", Heal: " + heal + ")";
     }
+    private SkillType type;
+    public enum SkillType {
+        DAMAGE, HEAL
+    }
+    public SkillType getType() {
+        return type;
+    }
+    public boolean isTargetSelf() {
+        return targetSelf;
+    }
+
 }

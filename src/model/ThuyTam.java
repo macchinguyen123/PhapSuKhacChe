@@ -6,19 +6,29 @@ public class ThuyTam extends Mage {
         super("💧 Thủy Tâm");
 
         // 1) Đánh thường — 0 mana — gây 10 sát thương, hồi +5 mana
-        skills.add(new Skill("Đánh Thường", 0, 10, 0, 5, false, "Tấn công cơ bản, hồi 5 mana"));
+        Skill danhThuong = new Skill("Đánh Thường", 0, 10, 0, 5, false, "Tấn công cơ bản, hồi 5 mana", false);
+        skills.add(danhThuong);
+        danhThuong.setEffectImg("src/img/thuyTam/nuoc.png");
 
         // 2) Vòi Nước — 10 mana — gây 12 sát thương, hồi 10 HP
-        skills.add(new Skill("Vòi Nước", 10, 12, 10, 0, false, "Gây sát thương ổn định, hồi 10 HP"));
+        Skill voiNuoc =new Skill("Vòi Nước", 10, 12, 10, 0, false, "Gây sát thương ổn định, hồi 10 HP", false);
+        skills.add(voiNuoc);
+        voiNuoc.setEffectImg("src/img/thuyTam/VoiNuoc.png");
 
         // 3) Xoáy Nước — 18 mana — gây 22 sát thương, hồi 8 mana
-        skills.add(new Skill("Xoáy Nước", 18, 22, 0, 8, false, "Tấn công mạnh, hồi 8 mana"));
+        Skill xoayNuoc = new Skill("Xoáy Nước", 18, 22, 0, 8, false, "Tấn công mạnh, hồi 8 mana",false);
+        xoayNuoc.setEffectImg("src/img/thuyTam/XoayNuoc.png");
+        skills.add(xoayNuoc);
 
         // 4) Hồi HP — 15 mana — hồi 20 HP
-        skills.add(new Skill("Hồi Thủy", 15, 0, 20, 0, false, "Hồi 20 HP"));
+        Skill hoiHP = new Skill("Hồi Thủy", 15, 0, 20, 0, false, "Hồi 20 HP",true);
+        skills.add(hoiHP);
+        hoiHP.setEffectImg("src/img/thuyTam/hoiMau.png");
 
         // 5) Chiêu đặc biệt — 20 mana
-        skills.add(new Skill("Tuyệt Kỹ Thủy Tâm", 20, 0, 0, 0, true, "Chiêu đặc biệt, khắc chế từng hệ"));
+        Skill tuyetKyThuyTam =new Skill("Tuyệt Kỹ Thủy Tâm", 20, 0, 0, 0, true, "Chiêu đặc biệt, khắc chế từng hệ",false);
+        skills.add(tuyetKyThuyTam);
+        tuyetKyThuyTam.setEffectImg("src/img/thuyTam/TuyetKyThuyTam.png");
     }
 
     @Override

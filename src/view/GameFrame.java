@@ -233,16 +233,21 @@ public class GameFrame extends JFrame {
     /**
      * Hiển thị hiệu ứng skill đơn giản
      */
-    public void showSkillEffect(Skill skill, boolean isPlayer) {
+    public void showSkillEffect(Skill skill, boolean targetIsEnemy) {
         String imgPath = skill.getEffectImg();
-        if (imgPath == null) return; // không có hiệu ứng thì thôi
+        if (imgPath == null) return;
 
-        JLabel target = isPlayer ? enemyImgLabel : playerImgLabel;
+        JLabel target = targetIsEnemy ? enemyImgLabel : playerImgLabel;
+
         ImageIcon icon = new ImageIcon(imgPath);
-        Image scaled = icon.getImage().getScaledInstance(target.getWidth(), target.getHeight(), Image.SCALE_SMOOTH);
+        Image scaled = icon.getImage().getScaledInstance(
+                target.getWidth(), target.getHeight(), Image.SCALE_SMOOTH
+        );
+
         JLabel effect = new JLabel(new ImageIcon(scaled));
         effect.setBounds(target.getX(), target.getY(), target.getWidth(), target.getHeight());
         effect.setOpaque(false);
+
         bgLabel.add(effect);
         bgLabel.setComponentZOrder(effect, 0);
         bgLabel.revalidate();
