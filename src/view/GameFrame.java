@@ -31,6 +31,8 @@ public class GameFrame extends JFrame {
 
         controller = new GameController(this);
         showStartScreen();
+        setResizable(false);
+
     }
 
     /**
@@ -155,9 +157,9 @@ public class GameFrame extends JFrame {
         bgLabel.add(log);
 
         // skill panel
-        skillPanel = new JPanel(new GridLayout(1, 5, 10, 10));
+        skillPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         skillPanel.setOpaque(false);
-        skillPanel.setBounds(80, 500, 800, 50);
+        skillPanel.setBounds(80, 430, 800, 130);
         bgLabel.add(skillPanel);
 
         showSkills(player);
@@ -192,16 +194,66 @@ public class GameFrame extends JFrame {
      */
     public void showSkills(Mage mage) {
         skillPanel.removeAll();
+
         for (Skill s : mage.getSkills()) {
-            JButton btn = new JButton("<html><center>" + s.getName() + "<br/>Mana: " + s.getManaCost() + "</center></html>");
-            btn.setFont(new Font("Arial", Font.BOLD, 13));
+
+            // Tạo panel chứa nút + label
+            JPanel wrapper = new JPanel();
+            wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
+            wrapper.setOpaque(false);
+            wrapper.setAlignmentX(Component.CENTER_ALIGNMENT); // <<< căn giữa cả cụm
+
+            // === NÚT TRÒN ===
+            CircleButton btn = new CircleButton("");
+            btn.setPreferredSize(new Dimension(90, 90));
             btn.setFocusPainted(false);
-            btn.addActionListener((ActionEvent e) -> controller.playerUseSkill(s));
-            skillPanel.add(btn);
+            btn.setBorderPainted(false);
+            btn.setContentAreaFilled(false);
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT); // <<< căn giữa nút
+
+            // Icon kỹ năng
+            if (s.getEffectImg() != null) {
+                ImageIcon icon = new ImageIcon(s.getEffectImg());
+                Image scaled = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+                btn.setIcon(new ImageIcon(scaled));
+            }
+
+            // Tooltip giữ nguyên
+            btn.setToolTipText(
+                    "<html><center>"
+                            + s.getName()
+                            + "<br>Mana: " + s.getManaCost()
+                            + "<br><i>" + s.getDescription() + "</i>"
+                            + "</center></html>"
+            );
+
+            btn.addActionListener(e -> controller.playerUseSkill(s));
+
+// === LABEL BÊN DƯỚI NÚT ===
+            JLabel info = new JLabel(
+                    "<html><center>"
+                            + s.getName()
+                            + "<br>Mana: " + s.getManaCost()
+                            + "</center></html>"
+            );
+            info.setForeground(Color.WHITE);
+            info.setAlignmentX(Component.CENTER_ALIGNMENT);
+            info.setAlignmentX(Component.CENTER_ALIGNMENT); // <<< căn giữa label
+
+
+            // Thêm vào wrapper
+            wrapper.add(btn);
+            wrapper.add(Box.createVerticalStrut(5));
+            wrapper.add(info);
+
+            skillPanel.add(wrapper);
         }
+
         skillPanel.revalidate();
         skillPanel.repaint();
     }
+
+
 
     /**
      * Cập nhật chỉ số HP/Mana

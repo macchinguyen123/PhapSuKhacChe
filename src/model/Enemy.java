@@ -99,7 +99,7 @@ public class Enemy {
                 if (eval > best) {
                     best = eval;
 
-                    // chỉ lưu chiêu tốt nhất ở tầng 3, bước đầu tiên
+                    // lưu chiêu tốt nhất ở tầng 3, bước đầu tiên
                     if (depth == 3) {
                         bestSkill = skill;
                     }
