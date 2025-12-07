@@ -75,7 +75,7 @@ public class GameController {
         }
 
         // 5s sau máy đánh
-        javax.swing.Timer delay = new javax.swing.Timer(3000, null);
+        javax.swing.Timer delay = new javax.swing.Timer(2000, null);
         delay.addActionListener(e -> {
             enemyTurn();
             delay.stop();  // dừng ngay sau khi chạy

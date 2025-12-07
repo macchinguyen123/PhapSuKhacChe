@@ -29,8 +29,8 @@ public class PhongVu extends Mage {
 //                System.out.println(user.getName() + " dùng Cơn Lốc! Gây 14 sát thương và làm " + target.getName() + " mất 8 mana.");
 //            }
 //        });
-        Skill conLoc = new Skill("Cơn Lốc", 10, 14, 0, 0, false, "Gây sát thương 14 và làm đối thủ mất 8 mana",false);
-        conLoc.setEffectImg("src/img/gio.png");
+        Skill conLoc = new Skill("      Cơn Lốc     ", 10, 14, 0, 0, false, "Gây sát thương 14 và làm đối thủ mất 8 mana",false);
+        conLoc.setEffectImg("src/img/phongVu/gio.png");
         skills.add(conLoc);
 
         // 3) Bảo Linh — 18 mana — gây 24 sát thương và hồi 10 HP
@@ -40,7 +40,7 @@ public class PhongVu extends Mage {
 
         // 4) Hồi HP — 15 mana — hồi 20 HP
         Skill hoiHP = new Skill("Hồi Phong", 15, 0, 20, 0, false, "Hồi 20 HP",true);
-        hoiHP.setEffectImg("src/img/gio.png");
+        hoiHP.setEffectImg("src/img/phongVu/HoiHP.png");
         skills.add(hoiHP);
 
         // 5) Chiêu đặc biệt — 20 mana

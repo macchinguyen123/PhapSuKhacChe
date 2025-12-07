@@ -6,7 +6,9 @@ public class HoaLong extends Mage {
         super("🔥 Hỏa Long");
 
         // 1) Đánh thường — 0 mana — gây 10 sát thương, hồi +5 mana.
-        skills.add(new Skill("Đánh Thường", 0, 10, 0, 5, false, "Tấn công cơ bản, hồi 5 mana", false));
+        Skill danhThuong = new Skill("Đánh Thường", 0, 10, 0, 5, false, "Tấn công cơ bản, hồi 5 mana", false);
+        skills.add(danhThuong);
+        danhThuong.setEffectImg("src/img/hoaLong/DanhThuong.png");
 
         // 2) Lửa Thánh — 10 mana — gây 12 sát thương
         Skill luaThanh = new Skill("Lửa Thánh", 10, 12, 0, 0, false, "Sát thương ổn định",false);
@@ -19,11 +21,15 @@ public class HoaLong extends Mage {
         skills.add(hoaBao);
 
         // 4) Hồi HP — 15 mana — hồi 25 HP
-        skills.add(new Skill("Hồi Phục", 15, 0, 25, 0, false, "Hồi 25 HP",true));
+        Skill hoiPhuc = new Skill("Hồi Phục", 15, 0, 25, 0, false, "Hồi 25 HP",true);
+        skills.add(hoiPhuc);
+        hoiPhuc.setEffectImg("src/img/hoaLong/HoiPhuc.png");
 
         // 5) Khắc chế đặc biệt — 20 mana
-        skills.add(new Skill("Long Viêm Trảm", 20, 0, 0, 0, true,
-                "Chiêu đặc biệt, hiệu quả khác nhau tùy đối thủ",false));
+        Skill longViemTram = new Skill("Long Viêm Trảm", 20, 0, 0, 0, true,
+                "Chiêu đặc biệt, hiệu quả khác nhau tùy đối thủ",false);
+        skills.add(longViemTram);
+        longViemTram.setEffectImg("src/img/hoaLong/LongViemTram.png");
     }
 
     @Override

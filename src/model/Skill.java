@@ -210,4 +210,7 @@ public class Skill {
         return targetSelf;
     }
 
+    public String getDescription() {
+        return description;
+    }
 }
