@@ -139,5 +139,31 @@ public class PhongVu extends Mage {
         return m;
     }
 
+    //ưu tiên gây khó khăn cho đối thủ (mana/chiêu)
+    @Override
+    public double heuristic(Mage enemyState, Mage playerState) {
+        double score = 0;
+
+        // HP
+        score += (this.getHp() - playerState.getHp()) * 2.0;
+
+        // Mana
+        score += (this.getMana() - playerState.getMana()) * 0.6;
+
+        // Chiêu đặc biệt
+        if (!this.specialUsed) score += 5;
+        if (!playerState.specialUsed) score -= 4;
+
+        // Tiềm năng skill
+        for (Skill skill : this.getSkills()) {
+            if (!this.canUseSkill(skill)) continue;
+            score += skill.getDamage() * 0.3;
+            if (!skill.isTargetSelf()) score += skill.getManaGain() * 0.5; // lấy mana đối thủ
+        }
+
+        return score;
+    }
+
+
 
 }

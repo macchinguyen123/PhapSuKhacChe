@@ -117,4 +117,44 @@ public class ThuyTam extends Mage {
         return m;
     }
 
+    @Override
+    public double heuristic(Mage enemyState, Mage playerState) {
+        double score = 0;
+
+        // 1. HP quan trọng nhất
+        score += (enemyState.getHp() - playerState.getHp()) * 3.0;
+
+        // 2. Mana để dùng skill
+        score += (enemyState.getMana() - playerState.getMana()) * 1.0;
+
+        // 3. Chiêu đặc biệt chưa dùng => tiềm năng cao
+        if (!enemyState.specialUsed) score += 6;
+        if (!playerState.specialUsed) score -= 4; // người chơi chưa dùng special => rủi ro
+
+        // 4. Đánh giá tiềm năng các skill còn lại
+        for (Skill skill : enemyState.getSkills()) {
+            if (!enemyState.canUseSkill(skill)) continue;
+
+            // Skill hồi máu
+            if (skill.getHeal() > 0) {
+                int missingHp = 100 - enemyState.getHp();
+                double healValue = Math.min(skill.getHeal(), missingHp);
+                score += healValue * 0.5; // càng hồi nhiều HP càng tốt
+            }
+
+            // Skill hồi mana
+            if (skill.getManaGain() > 0) {
+                int missingMana = 50 - enemyState.getMana();
+                double manaValue = Math.min(skill.getManaGain(), missingMana);
+                score += manaValue * 0.3; // hồi mana cũng có giá trị
+            }
+
+            // Skill sát thương
+            score += skill.getDamage() * 0.2; // damage ít quan trọng hơn HP/Mana
+        }
+
+        return score;
+    }
+
+
 }

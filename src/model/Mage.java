@@ -113,6 +113,9 @@ public abstract class Mage {
 
     public abstract Mage cloneMage();
 
+    // Heuristic riêng cho AI
+    public abstract double heuristic(Mage enemyState, Mage playerState);
+
     @Override
     public String toString() {
         return name + " (HP: " + hp + ", Mana: " + mana + ")";
