@@ -200,6 +200,8 @@ public class Skill {
         return name + " (Mana: " + manaCost + ", DMG: " + damage + ", Heal: " + heal + ")";
     }
     private SkillType type;
+
+
     public enum SkillType {
         DAMAGE, HEAL
     }

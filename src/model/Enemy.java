@@ -19,7 +19,9 @@ public class Enemy {
 
     public Skill chooseSkillMinimax(Mage player) {
         bestSkill = null;
-        minimax(true, mage.cloneMage(), player.cloneMage(), 3); // độ sâu 3
+//        minimax(true, mage.cloneMage(), player.cloneMage(), 3); // độ sâu 3
+        minimaxAlphaBeta(true, mage.cloneMage(), player.cloneMage(), 3, -Double.MAX_VALUE, Double.MAX_VALUE);
+
 
         if (bestSkill == null) {
             //nếu ko chọn đc chiêu nào thì random
@@ -47,19 +49,7 @@ public class Enemy {
     }
 
     public double heuristic(Mage enemyState, Mage playerState) {
-        double score = 0;
-
-        // HP
-        score += (enemyState.getHp() - playerState.getHp()) * 2.0;
-
-        // Mana
-        score += (enemyState.getMana() - playerState.getMana()) * 0.5;
-
-        // chiêu đặc biệt
-        if (!enemyState.specialUsed) score += 5;
-        if (!playerState.specialUsed) score -= 3;
-
-        return score;
+        return mage.heuristic(enemyState, playerState);
     }
 
     /**
@@ -133,6 +123,57 @@ public class Enemy {
             return best;
         }
     }
+    public double minimaxAlphaBeta(boolean maximizing, Mage enemyState, Mage playerState, int depth, double alpha, double beta) {
+
+        if (depth == 0 || enemyState.getHp() <= 0 || playerState.getHp() <= 0) {
+            return heuristic(enemyState, playerState);
+        }
+
+        if (maximizing) {
+            double best = -Double.MAX_VALUE;
+
+            for (Skill skill : enemyState.getSkills()) {
+                if (!enemyState.canUseSkill(skill)) continue;
+
+                Mage e = enemyState.cloneMage();
+                Mage p = playerState.cloneMage();
+                e.useSkillSample(skill, p);
+
+                double eval = minimaxAlphaBeta(false, e, p, depth - 1, alpha, beta);
+
+                if (eval > best) {
+                    best = eval;
+                    if (depth == 3) bestSkill = skill;
+                }
+
+                alpha = Math.max(alpha, best);
+                if (beta <= alpha) break; // cắt tỉa nhánh
+            }
+
+            return best;
+
+        } else {
+            double best = Double.MAX_VALUE;
+
+            for (Skill skill : playerState.getSkills()) {
+                if (!playerState.canUseSkill(skill)) continue;
+
+                Mage e = enemyState.cloneMage();
+                Mage p = playerState.cloneMage();
+                p.useSkillSample(skill, e);
+
+                double eval = minimaxAlphaBeta(true, e, p, depth - 1, alpha, beta);
+
+                best = Math.min(best, eval);
+
+                beta = Math.min(beta, best);
+                if (beta <= alpha) break; // cắt tỉa nhánh
+            }
+
+            return best;
+        }
+    }
+
 
 
 }

@@ -26,7 +26,7 @@ public class HoaLong extends Mage {
         hoiPhuc.setEffectImg("src/img/hoaLong/HoiPhuc.png");
 
         // 5) Khắc chế đặc biệt — 20 mana
-        Skill longViemTram = new Skill("Long Viêm Trảm", 20, 0, 0, 0, true,
+        Skill longViemTram = new Skill("Long Viêm Trảm", 20, 35, 0, 0, true,
                 "Chiêu đặc biệt, hiệu quả khác nhau tùy đối thủ",false);
         skills.add(longViemTram);
         longViemTram.setEffectImg("src/img/hoaLong/LongViemTram.png");
@@ -115,6 +115,30 @@ public class HoaLong extends Mage {
         return m;
     }
 
+    //ưu tiên sát thương
+    @Override
+    public double heuristic(Mage enemyState, Mage playerState) {
+        double score = 0;
+
+        // HP
+        score += (this.getHp() - playerState.getHp()) * 2.0;
+
+        // Mana
+        score += (this.getMana() - playerState.getMana()) * 0.5;
+
+        // Chiêu đặc biệt
+        if (!this.specialUsed) score += 6;
+        if (!playerState.specialUsed) score -= 3;
+
+        // Tiềm năng sát thương của skill
+        for (Skill skill : this.getSkills()) {
+            if (!this.canUseSkill(skill)) continue;
+            score += skill.getDamage() * 0.5; // sát thương quan trọng
+            if (skill.getHeal() > 0) score += 1; // hồi HP ít quan trọng
+        }
+
+        return score;
+    }
 
 
 }
