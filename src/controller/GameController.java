@@ -11,8 +11,7 @@ public class GameController {
     private boolean isGameOver = false;
     private final GameFrame frame;
     private Mage selectedPlayerMage, selectedEnemyMage;
-    private boolean isPlayerTurn = true;//kiểm soát lượt
-
+    private boolean isPlayerTurn = true;// kiểm soát lượt
 
     public GameController(GameFrame frame) {
         this.frame = frame;
@@ -31,35 +30,44 @@ public class GameController {
         enemy = new Enemy(selectedEnemyMage);
 
         frame.setupBattle(player.mage, enemy.mage);
-        frame.updateLog("🔰 Trận đấu giữa "
-                + player.mage.getName() + " và " + enemy.mage.getName() + " bắt đầu!");
+        frame.showVersus(player.mage.getName(), enemy.mage.getName());
     }
 
     public void startGame() {
         frame.showCharacterSelect(true);
     }
 
-    public void exit(){
+    public void exit() {
         System.exit(0);
+    }
+
+    /** Quay lại màn hình chính */
+    public void resetToStart() {
+        isGameOver = false;
+        isPlayerTurn = true;
+        selectedPlayerMage = null;
+        selectedEnemyMage = null;
+        frame.showStartScreen();
     }
 
     /** Khi người chơi chọn skill */
     public void playerUseSkill(Skill skill) {
-        if (isGameOver) return;
+        if (isGameOver)
+            return;
 
         if (!isPlayerTurn) {
-            frame.updateLog("⏳ Chưa đến lượt bạn!");
+            frame.showWarning("Chưa đến lượt bạn!");
             return;
         }
 
         if (player.mage.getMana() < skill.getManaCost()) {
-            frame.updateLog("⚠️ Không đủ mana để dùng " + skill.getName() + "!");
+            frame.showWarning("Không đủ mana để dùng " + skill.getName() + "!");
             return;
         }
 
         // Khóa nút skill
         frame.enableSkillButtons(false);
-        isPlayerTurn = false;   // KHÓA LƯỢT NGƯỜI CHƠI
+        isPlayerTurn = false; // KHÓA LƯỢT NGƯỜI CHƠI
 
         // Player dùng skill
         player.useSkill(skill, enemy);
@@ -67,7 +75,7 @@ public class GameController {
         frame.showSkillEffect(skill, targetIsEnemy);
         frame.updateBars(player.mage, enemy.mage);
 
-        frame.updateLog("✨ Bạn dùng " + skill.getName() + "! Chờ máy tấn công...");
+
 
         if (!enemy.mage.isAlive()) {
             checkWinLose();
@@ -78,30 +86,36 @@ public class GameController {
         javax.swing.Timer delay = new javax.swing.Timer(2000, null);
         delay.addActionListener(e -> {
             enemyTurn();
-            delay.stop();  // dừng ngay sau khi chạy
-            if (!isGameOver) frame.enableSkillButtons(true);
+            delay.stop(); // dừng ngay sau khi chạy
+            if (!isGameOver)
+                frame.enableSkillButtons(true);
         });
         delay.start();
     }
+
     /** Kiểm tra thắng/thua */
     private void checkWinLose() {
         if (!player.mage.isAlive()) {
             isGameOver = true;
-            frame.showEnd("💀 Bạn đã thua!");
+            frame.showEnd("THẤT BẠI");
         } else if (!enemy.mage.isAlive()) {
             isGameOver = true;
-            frame.showEnd("🏆 Chiến thắng thuộc về bạn!");
+            frame.showEnd("CHIẾN THẮNG");
         }
     }
 
     /** Xác định hiệu ứng skill */
     private int getSkillType(Mage mage) {
-        if (mage instanceof HoaLong) return 0; // lửa
-        if (mage instanceof ThuyTam) return 1; // nước
+        if (mage instanceof HoaLong)
+            return 0; // lửa
+        if (mage instanceof ThuyTam)
+            return 1; // nước
         return 2; // gió
     }
+
     private void enemyTurn() {
-        if (isGameOver) return;
+        if (isGameOver)
+            return;
 
         Skill enemySkill = enemy.chooseSkillMinimax(player.mage);
 
@@ -113,20 +127,18 @@ public class GameController {
 
             frame.showSkillEffect(enemySkill, targetIsEnemy);
             frame.showSkillEffect(enemySkill, targetIsEnemy);
-            frame.updateLog("⚔️ Máy dùng " + enemySkill.getName() + "!");
+
         } else {
-            frame.updateLog("❗ Máy không đủ mana để dùng skill!");
+            frame.updateLog("Máy không đủ mana để dùng skill!");
         }
 
         frame.updateBars(player.mage, enemy.mage);
         checkWinLose();
 
         if (!isGameOver) {
-            isPlayerTurn = true;              // Trả lượt lại cho người chơi
-            frame.enableSkillButtons(true);   // Mở nút chiêu lại
+            isPlayerTurn = true; // Trả lượt lại cho người chơi
+            frame.enableSkillButtons(true); // Mở nút chiêu lại
         }
     }
-
-
 
 }
