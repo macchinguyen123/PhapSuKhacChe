@@ -3,7 +3,7 @@ package model;
 public class HoaLong extends Mage {
 
     public HoaLong() {
-        super("🔥 Hỏa Long");
+        super("Hỏa Long");
 
         // 1) Đánh thường — 0 mana — gây 10 sát thương, hồi +5 mana.
         Skill danhThuong = new Skill("Đánh Thường", 0, 10, 0, 5, false, "Tấn công cơ bản, hồi 5 mana", false);
@@ -69,12 +69,10 @@ public class HoaLong extends Mage {
     }
     public void useSpecialSample(Mage target) {
         if (specialUsed) {
-//            System.out.println("Chiêu đặc biệt đã dùng rồi!");
             return;
         }
 
         if (mana < 20) {
-//            System.out.println("Không đủ mana để dùng chiêu đặc biệt!");
             return;
         }
 
@@ -83,22 +81,19 @@ public class HoaLong extends Mage {
         // Trừ mana bản thân và log
         int manaCost = Math.min(20, mana);
         useMana(manaCost);
-//        System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
-
-//        System.out.println(name + " dùng chiêu đặc biệt Long Viêm Trảm!");
 
         if (target instanceof PhongVu) {
             target.takeDamage(38);
-//            System.out.println("Khắc chế Gió! Gây 38 sát thương.");
+
         } else if (target instanceof ThuyTam) {
             target.takeDamage(20);
             heal(15);
             regainMana(5);
-//            System.out.println("Khắc chế Thuỷ! Gây 20 sát thương, hồi 15 HP và 5 mana.");
+
         } else if (target instanceof HoaLong) {
             target.takeDamage(30);
             regainMana(10);
-//            System.out.println("Gặp cùng hệ Hỏa! Gây 30 sát thương và hồi 10 mana.");
+
         }
     }
 

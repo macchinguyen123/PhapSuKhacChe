@@ -123,7 +123,6 @@ public class Skill {
     public void executeSample(Mage user, Mage target, Mage actualPlayer, Mage actualEnemy) {
         // Kiểm tra mana
         if (user.getMana() < manaCost) {
-//            System.out.println("⚠️ " + user.getName() + " không đủ mana dùng " + name + "!");
             return;
         }
 
