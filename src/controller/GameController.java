@@ -125,16 +125,20 @@ public class GameController {
         Skill enemySkill = enemy.chooseSkillMinimax(player.mage);
 
         if (enemySkill != null) {
+            frame.showTempLog(
+                    "Đối thủ dùng chiêu: " + enemySkill.getName()
+            );
+
             enemy.useSkill(enemySkill, player);
             // TRUE = hiệu ứng lên enemyMage
             // FALSE = hiệu ứng lên playerMage
             boolean targetIsEnemy = enemySkill.isTargetSelf();
 
             frame.showSkillEffect(enemySkill, targetIsEnemy);
-            frame.showSkillEffect(enemySkill, targetIsEnemy);
+
 
         } else {
-            frame.updateLog("Máy không đủ mana để dùng skill!");
+            frame.updateLog("Đối thủ không đủ mana để dùng skill!");
         }
 
         frame.updateBars(player.mage, enemy.mage);
