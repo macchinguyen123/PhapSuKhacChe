@@ -60,6 +60,11 @@ public class GameController {
             return;
         }
 
+        if (skill.isSpecial() && player.mage.hasUsedSpecial()) {
+            frame.showWarning("Chiêu thức đặc biệt chỉ được dùng 1 lần!");
+            return;
+        }
+
         if (player.mage.getMana() < skill.getManaCost()) {
             frame.showWarning("Không đủ mana để dùng " + skill.getName() + "!");
             return;
