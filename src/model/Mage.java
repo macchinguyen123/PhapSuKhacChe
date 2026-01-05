@@ -8,7 +8,7 @@ public abstract class Mage {
     protected int hp;
     protected int mana;
     protected List<Skill> skills;
-    protected boolean specialUsed;
+    protected boolean specialUsed = false;
 
     public Mage(String name) {
         this.name = name;
@@ -33,6 +33,14 @@ public abstract class Mage {
 
     public List<Skill> getSkills() {
         return skills;
+    }
+
+    public boolean hasUsedSpecial() {
+        return specialUsed;
+    }
+
+    public void markSpecialUsed() {
+        this.specialUsed = true;
     }
 
     // ===== Giới hạn chỉ số =====

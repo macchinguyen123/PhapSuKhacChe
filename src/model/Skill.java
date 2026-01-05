@@ -94,7 +94,11 @@ public class Skill {
             if (user instanceof HoaLong) ((HoaLong) user).useSpecial(target);
             else if (user instanceof PhongVu) ((PhongVu) user).useSpecial(target);
             else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target);
+
+            // 🔒 ĐÁNH DẤU ĐÃ DÙNG
+            user.markSpecialUsed();
         }
+
 
         int userHpChange = user.getHp() - userHpBefore;
         int targetHpChange = targetHpBefore - target.getHp(); // Gây sát thương dương
@@ -156,9 +160,12 @@ public class Skill {
 
         // --- Các skill đặc biệt ---
         if (isSpecial) {
-            if (user instanceof HoaLong) ((HoaLong) user).useSpecialSample(target);
-            else if (user instanceof PhongVu) ((PhongVu) user).useSpecialSample(target);
-            else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecialSample(target);
+            if (user instanceof HoaLong) ((HoaLong) user).useSpecial(target);
+            else if (user instanceof PhongVu) ((PhongVu) user).useSpecial(target);
+            else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target);
+
+            // 🔒 ĐÁNH DẤU ĐÃ DÙNG
+            user.markSpecialUsed();
         }
 
         int userHpChange = user.getHp() - userHpBefore;
