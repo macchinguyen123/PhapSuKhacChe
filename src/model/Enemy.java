@@ -19,9 +19,28 @@ public class Enemy {
 
     public Skill chooseSkillMinimax(Mage player) {
         bestSkill = null;
-//        minimax(true, mage.cloneMage(), player.cloneMage(), 3); // độ sâu 3
-        minimaxAlphaBeta(true, mage.cloneMage(), player.cloneMage(), 3, -Double.MAX_VALUE, Double.MAX_VALUE);
 
+
+        // ====== START MEASURE ======
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();
+
+        long startTime = System.nanoTime();
+
+        minimax(true, mage.cloneMage(), player.cloneMage(), 4); // độ sâu 3
+//        minimaxAlphaBeta(true, mage.cloneMage(), player.cloneMage(), 4, -Double.MAX_VALUE, Double.MAX_VALUE);
+        long endTime = System.nanoTime();
+
+        long usedMemoryBytes =
+                runtime.totalMemory() - runtime.freeMemory();
+
+        double executionTimeMs = (endTime - startTime) / 1_000_000.0;
+        double usedMemoryKB = usedMemoryBytes / 1024.0;
+
+        // ====== OUTPUT======
+        System.out.println("Memory used: " + Math.round(usedMemoryKB) + " kilobytes");
+        System.out.println("Executed Time: " + executionTimeMs + " ms");
+        // ====== END MEASURE ======
 
         if (bestSkill == null) {
             //nếu ko chọn đc chiêu nào thì random
@@ -90,7 +109,7 @@ public class Enemy {
                     best = eval;
 
                     // lưu chiêu tốt nhất ở tầng 3, bước đầu tiên
-                    if (depth == 3) {
+                    if (depth == 4) {
                         bestSkill = skill;
                     }
                 }
