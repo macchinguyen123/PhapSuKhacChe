@@ -47,7 +47,6 @@ public class ThuyTam extends Mage {
 
         // Trừ mana bản thân đúng chuẩn
         int manaCost = Math.min(20, mana);
-        useMana(manaCost);
         System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
 
         System.out.println(name + " dùng chiêu đặc biệt 🌊 Tuyệt Kỹ Thủy Tâm!");
@@ -132,7 +131,7 @@ public class ThuyTam extends Mage {
         if (!enemyState.specialUsed) score += 6;
         if (!playerState.specialUsed) score -= 4;
 
-        // 5. Đếm số skill có thể dùng (ưu thế linh hoạt)
+        // 5. Đếm số skill có thể dùng (ưu thế linh hoạt) Nhiều skill = linh hoạt, áp đảo đối thủ
         int enemySkillCount = 0;
         int playerSkillCount = 0;
 
