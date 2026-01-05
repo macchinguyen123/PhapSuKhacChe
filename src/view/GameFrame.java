@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import javax.swing.Timer;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 
 public class GameFrame extends JFrame {
@@ -59,6 +62,23 @@ public class GameFrame extends JFrame {
         // Add vào background
         bgLabel.add(startBtn);
 
+        // === ICON HƯỚNG DẪN ===
+        ImageIcon guideIcon = new ImageIcon("src/img/guide.png");
+        Image guideScaled = guideIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        guideIcon = new ImageIcon(guideScaled);
+
+        JButton guideBtn = new JButton(guideIcon);
+        guideBtn.setBounds(900 - 35 - 45, 10, 35, 35); // nằm cạnh Exit
+        guideBtn.setContentAreaFilled(false);
+        guideBtn.setBorder(null);
+        guideBtn.setFocusPainted(false);
+        guideBtn.setOpaque(false);
+
+        guideBtn.addActionListener(e -> showGuideDialog());
+
+        bgLabel.add(guideBtn);
+        bgLabel.setComponentZOrder(guideBtn, 0);
+
         ImageIcon icon = new ImageIcon("src/img/exit.png");
         Image scaled = icon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         icon = new ImageIcon(scaled);
@@ -87,11 +107,16 @@ public class GameFrame extends JFrame {
 
         log.setText(text);
         log.setFont(new Font("Serif", Font.BOLD, 20));
-        log.setForeground(Color.WHITE);
-        ((GlowLabel) log).setGlowColor(new Color(0, 0, 0, 140));
+
+        // 🔴 MÀU ĐỎ NHẠT (dễ nhìn, không gắt)
+        log.setForeground(new Color(255, 80, 80));
+
+        // 🤍 VIỀN / GLOW MÀU TRẮNG
+        ((GlowLabel) log).setGlowColor(new Color(255, 255, 255, 200));
+
         log.repaint();
 
-        // ⏱️ 2 giây sau tự xóa
+        // ⏱️ 2 GIÂY SAU TỰ BIẾN MẤT
         warningTimer = new Timer(2000, e -> {
             log.setText("");
             log.repaint();
@@ -99,6 +124,7 @@ public class GameFrame extends JFrame {
         warningTimer.setRepeats(false);
         warningTimer.start();
     }
+
     /**
      * Khởi tạo giao diện trận đấu
      */
@@ -306,6 +332,26 @@ public class GameFrame extends JFrame {
         log.repaint();
     }
 
+    public void showTempLog(String text) {
+        // Nếu đang có warning cũ → hủy trước
+        if (warningTimer != null && warningTimer.isRunning()) {
+            warningTimer.stop();
+        }
+
+        log.setText(text);
+        log.setFont(new Font("Serif", Font.BOLD, 20));
+        log.setForeground(Color.WHITE);
+        ((GlowLabel) log).setGlowColor(new Color(0, 0, 0, 140));
+        log.repaint();
+
+        // ⏱️ 2 giây sau tự xóa
+        warningTimer = new Timer(2000, e -> {
+            log.setText("");
+            log.repaint();
+        });
+        warningTimer.setRepeats(false);
+        warningTimer.start();
+    }
     /**
      * Hiển thị hiệu ứng skill đơn giản
      */
@@ -910,4 +956,126 @@ public class GameFrame extends JFrame {
             g2.drawString(text, x, y);
         }
     }
+    private void showGuideDialog() {
+        JDialog dialog = new JDialog(this, "HƯỚNG DẪN CHƠI", true);
+        dialog.setSize(600, 400);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout());
+        dialog.setResizable(false);
+
+        // === NỘI DUNG HƯỚNG DẪN ===
+        JTextPane guideText = new JTextPane();
+        guideText.setEditable(false);
+        guideText.setBackground(new Color(20, 20, 40));
+        guideText.setBorder(null);
+
+        StyledDocument doc = guideText.getStyledDocument();
+
+// ===== STYLE =====
+        Style base = guideText.addStyle("base", null);
+        StyleConstants.setFontFamily(base, "Serif");
+        StyleConstants.setFontSize(base, 18);
+        StyleConstants.setForeground(base, Color.WHITE);
+
+        Style title = guideText.addStyle("title", base);
+        StyleConstants.setFontSize(title, 24);
+        StyleConstants.setBold(title, true);
+        StyleConstants.setAlignment(title, StyleConstants.ALIGN_CENTER);
+
+        Style fire = guideText.addStyle("fire", base);
+        StyleConstants.setForeground(fire, new Color(255, 120, 80));
+        StyleConstants.setBold(fire, true);
+
+        Style wind = guideText.addStyle("wind", base);
+        StyleConstants.setForeground(wind, new Color(120, 220, 255));
+        StyleConstants.setBold(wind, true);
+
+        Style water = guideText.addStyle("water", base);
+        StyleConstants.setForeground(water, new Color(120, 180, 255));
+        StyleConstants.setBold(water, true);
+
+        Style tip = guideText.addStyle("tip", base);
+        StyleConstants.setForeground(tip, new Color(255, 220, 120));
+        StyleConstants.setItalic(tip, true);
+
+
+        // ===== INSERT TEXT =====
+        try {
+            doc.insertString(doc.getLength(),
+                    "🎮 HƯỚNG DẪN CHƠI PHÁP SƯ NGUYÊN TỐ\n\n", title);
+
+            doc.insertString(doc.getLength(),
+                    "🔥 HOA LONG – SÁT THƯƠNG BÙNG NỔ\n", fire);
+            doc.insertString(doc.getLength(),
+                    "• Đánh Thường: 0 mana, gây 10 sát thương, hồi 5 mana\n"
+                            + "• Lửa Thánh: 10 mana, gây 12 sát thương\n"
+                            + "• Hỏa Bạo: 18 mana, gây 30 sát thương, tự mất 10 HP\n"
+                            + "• Hồi Phục: 15 mana, hồi 25 HP\n"
+                            + "• Long Viêm Trảm (ĐB):\n"
+                            + "   - Gặp Phong Vũ: gây 38 sát thương\n"
+                            + "   - Gặp Thủy Tâm: gây 20 sát thương, hồi 15 HP + 5 mana\n"
+                            + "   - Gặp Hoa Long: gây 30 sát thương, hồi 10 mana\n",
+                    base);
+            doc.insertString(doc.getLength(),
+                    "👉 Lối chơi: dồn sát thương, kết liễu nhanh\n\n", tip);
+
+            doc.insertString(doc.getLength(),
+                    "🌪 PHONG VŨ – KIỂM SOÁT & GÂY KHÓ CHỊU\n", wind);
+            doc.insertString(doc.getLength(),
+                    "• Đánh Thường: 0 mana, gây 10 sát thương, hồi 5 mana\n"
+                            + "• Cơn Lốc: 10 mana, gây 14 sát thương, làm đối thủ mất 8 mana\n"
+                            + "• Bảo Linh: 18 mana, gây 24 sát thương, hồi 10 HP\n"
+                            + "• Hồi Phong: 15 mana, hồi 20 HP\n"
+                            + "• Phong Thần Kích (ĐB):\n"
+                            + "   - Gặp Hoa Long: gây 25 sát thương, hồi 10 HP\n"
+                            + "   - Gặp Thủy Tâm: gây 15 sát thương, hồi 20 HP + 10 mana\n"
+                            + "   - Gặp Phong Vũ: gây 30 sát thương, hồi 10 mana\n",
+                    base);
+            doc.insertString(doc.getLength(),
+                    "👉 Lối chơi: phá mana, ép đối thủ thiếu chiêu\n\n", tip);
+
+            doc.insertString(doc.getLength(),
+                    "🌊 THỦY TÂM – BỀN BỈ & HỒI PHỤC\n", water);
+            doc.insertString(doc.getLength(),
+                    "• Đánh Thường: 0 mana, gây 10 sát thương, hồi 5 mana\n"
+                            + "• Vòi Nước: 10 mana, gây 12 sát thương, hồi 10 HP\n"
+                            + "• Xoáy Nước: 18 mana, gây 22 sát thương, hồi 8 mana\n"
+                            + "• Hồi Thủy: 15 mana, hồi 20 HP\n"
+                            + "• Tuyệt Kỹ Thủy Tâm (ĐB):\n"
+                            + "   - Gặp Hoa Long: hồi 40 HP (tối đa 50)\n"
+                            + "   - Gặp Phong Vũ: gây 10 sát thương, hút 10 mana\n"
+                            + "   - Gặp Thủy Tâm: hồi 50 mana, mất 10 HP\n",
+                    base);
+            doc.insertString(doc.getLength(),
+                    "👉 Lối chơi: trụ lâu, phản công\n\n", tip);
+
+            doc.insertString(doc.getLength(),
+                    "⚠️ LƯU Ý: Chiêu ĐẶC BIỆT chỉ dùng DUY NHẤT 1 LẦN\n",
+                    tip);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        JScrollPane scroll = new JScrollPane(guideText);
+        scroll.setBorder(null);
+
+        // === NÚT ĐÓNG ===
+        JButton closeBtn = new JButton("ĐÓNG");
+        closeBtn.setFont(new Font("Serif", Font.BOLD, 18));
+        closeBtn.setFocusPainted(false);
+        closeBtn.addActionListener(e -> dialog.dispose());
+
+        JPanel bottom = new JPanel();
+        bottom.setBackground(new Color(20, 20, 40));
+        bottom.add(closeBtn);
+
+        dialog.add(scroll, BorderLayout.CENTER);
+        dialog.add(bottom, BorderLayout.SOUTH);
+
+        dialog.setVisible(true);
+    }
+
 }
