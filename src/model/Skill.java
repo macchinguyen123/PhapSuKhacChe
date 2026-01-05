@@ -75,8 +75,9 @@ public class Skill {
 
         // --- HEAL ---
         if (heal != 0) {
-            if (heal > 0) user.heal(heal);
-            else user.takeDamage(-heal);
+            Mage healTarget = targetSelf ? user : target;
+            if (heal > 0) healTarget.heal(heal);
+            else healTarget.takeDamage(-heal);
         }
 
         // --- MANA GAIN cho user ---
@@ -144,8 +145,9 @@ public class Skill {
 
         // --- HEAL ---
         if (heal != 0) {
-            if (heal > 0) user.heal(heal);
-            else user.takeDamage(-heal);
+            Mage healTarget = targetSelf ? user : target;
+            if (heal > 0) healTarget.heal(heal);
+            else healTarget.takeDamage(-heal);
         }
 
         // --- MANA GAIN cho user ---

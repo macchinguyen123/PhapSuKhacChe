@@ -123,34 +123,35 @@ public class ThuyTam extends Mage {
         // 2. Mana để dùng skill
         score += (enemyState.getMana() - playerState.getMana()) * 1.0;
 
-        // 3. Chiêu đặc biệt chưa dùng => tiềm năng cao
-        if (!enemyState.specialUsed) score += 6;
-        if (!playerState.specialUsed) score -= 4; // người chơi chưa dùng special => rủi ro
-
-        // 4. Đánh giá tiềm năng các skill còn lại
-        for (Skill skill : enemyState.getSkills()) {
-            if (!enemyState.canUseSkill(skill)) continue;
-
-            // Skill hồi máu
-            if (skill.getHeal() > 0) {
-                int missingHp = 100 - enemyState.getHp();
-                double healValue = Math.min(skill.getHeal(), missingHp);
-                score += healValue * 0.5; // càng hồi nhiều HP càng tốt
-            }
-
-            // Skill hồi mana
-            if (skill.getManaGain() > 0) {
-                int missingMana = 50 - enemyState.getMana();
-                double manaValue = Math.min(skill.getManaGain(), missingMana);
-                score += manaValue * 0.3; // hồi mana cũng có giá trị
-            }
-
-            // Skill sát thương
-            score += skill.getDamage() * 0.2; // damage ít quan trọng hơn HP/Mana
+        // 3. BONUS KHI PLAYER HP THẤP - cơ hội giết địch
+        if (playerState.getHp() < 25) {
+            score += 20; // Tình huống có lợi, sắp thắng
         }
+
+        // 4. Chiêu đặc biệt chưa dùng => tiềm năng cao
+        if (!enemyState.specialUsed) score += 6;
+        if (!playerState.specialUsed) score -= 4;
+
+        // 5. Đếm số skill có thể dùng (ưu thế linh hoạt)
+        int enemySkillCount = 0;
+        int playerSkillCount = 0;
+
+        for (Skill skill : enemyState.getSkills()) {
+            if (enemyState.canUseSkill(skill)) {
+                enemySkillCount++;
+            }
+        }
+
+        for (Skill skill : playerState.getSkills()) {
+            if (playerState.canUseSkill(skill)) {
+                playerSkillCount++;
+            }
+        }
+
+        // Ưu thế về số lượng lựa chọn
+        score += (enemySkillCount - playerSkillCount) * 2;
 
         return score;
     }
-
 
 }
