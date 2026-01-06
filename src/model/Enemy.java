@@ -25,7 +25,8 @@ public class Enemy {
         Runtime runtime = Runtime.getRuntime();
         runtime.gc();
 
-        minimax(true, mage.cloneMage(), player.cloneMage(), 4); // độ sâu 3
+        minimax(true, mage.cloneMage(), player.cloneMage(), 6); // độ sâu 6
+//        minimaxAlphaBeta(true, mage.cloneMage(), player.cloneMage(), 5, -Double.MAX_VALUE, Double.MAX_VALUE);
 
 
         // ====== END MEASURE ======
@@ -64,6 +65,7 @@ public class Enemy {
      * maximizing = false -> lượt Player (bạn)
      * enemyState, playerState -> bản clone (mô phỏng)
      * depth -> độ sâu còn lại
+     *
      * @param maximizing
      * @param enemyState
      * @param playerState
@@ -89,15 +91,14 @@ public class Enemy {
                 Mage p = playerState.cloneMage();
                 e.useSkillSample(skill, p);
 
-                //Đệ quy xuống tầng dưới (lượt Player)
+                //Đệ quy gọi minimax xuống tầng dưới (lượt Player), điểm đánh giá trạng thái
                 double eval = minimax(false, e, p, depth - 1);
 
                 //Máy chọn giá trị lớn nhất, đánh giá càng lớn càng có lợi
-                if (eval > best) {
-                    best = eval;
+                if (eval > best) {                    best = eval;
 
                     // lưu chiêu tốt nhất ở tầng 4, bước đầu tiên
-                    if (depth == 4) {
+                    if (depth == 6) {
                         bestSkill = skill;
                     }
                 }
@@ -130,6 +131,7 @@ public class Enemy {
             return best;
         }
     }
+
     public double minimaxAlphaBeta(boolean maximizing, Mage enemyState, Mage playerState, int depth, double alpha, double beta) {
 
         if (depth == 0 || enemyState.getHp() <= 0 || playerState.getHp() <= 0) {
@@ -180,7 +182,6 @@ public class Enemy {
             return best;
         }
     }
-
 
 
 }

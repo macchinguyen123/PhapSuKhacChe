@@ -11,7 +11,7 @@ public class GameController {
     private boolean isGameOver = false;
     private final GameFrame frame;
     private Mage selectedPlayerMage, selectedEnemyMage;
-    private boolean isPlayerTurn = true;// kiểm soát lượt
+    private boolean isPlayerTurn = true;// kiểm soát lượt false là máy
 
     public GameController(GameFrame frame) {
         this.frame = frame;
@@ -31,6 +31,13 @@ public class GameController {
 
         frame.setupBattle(player.mage, enemy.mage);
         frame.showVersus(player.mage.getName(), enemy.mage.getName());
+//        // THÊM ĐOẠN NÀY: Cho máy đi trước
+//        javax.swing.Timer delay = new javax.swing.Timer(2000, null);
+//        delay.addActionListener(e -> {
+//            enemyTurn();
+//            delay.stop();
+//        });
+//        delay.start();
     }
 
     public void startGame() {
@@ -44,7 +51,7 @@ public class GameController {
     /** Quay lại màn hình chính */
     public void resetToStart() {
         isGameOver = false;
-        isPlayerTurn = true;
+        isPlayerTurn = true;//false là máy
         selectedPlayerMage = null;
         selectedEnemyMage = null;
         frame.showStartScreen();
