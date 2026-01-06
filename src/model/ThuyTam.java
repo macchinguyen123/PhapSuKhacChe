@@ -11,7 +11,7 @@ public class ThuyTam extends Mage {
         danhThuong.setEffectImg("src/img/thuyTam/nuoc.png");
 
         // 2) Vòi Nước — 10 mana — gây 12 sát thương, hồi 10 HP
-        Skill voiNuoc =new Skill("Vòi Nước", 10, 12, 10, 0, false, "Gây sát thương ổn định, hồi 10 HP", false);
+        Skill voiNuoc =new Skill("Vòi Nước", 10, 17, 10, 0, false, "Gây sát thương ổn định, hồi 10 HP", false);
         skills.add(voiNuoc);
         voiNuoc.setEffectImg("src/img/thuyTam/VoiNuoc.png");
 
@@ -53,7 +53,7 @@ public class ThuyTam extends Mage {
 
         if (target instanceof HoaLong) {
             int healAmount = Math.min(50, 20 * 2); // ví dụ hồi gấp đôi sát thương
-            heal(healAmount);
+            heal(50);
             System.out.println("Khắc chế Hỏa Long! Hồi " + healAmount + " HP (tối đa 50).");
         } else if (target instanceof PhongVu) {
             target.useMana(Math.min(10, target.getMana())); // trừ mana đối thủ chuẩn

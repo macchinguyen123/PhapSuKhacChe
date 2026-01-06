@@ -32,7 +32,7 @@ public class PhongVu extends Mage {
         // " + target.getName() + " mất 8 mana.");
         // }
         // });
-        Skill conLoc = new Skill("      Cơn Lốc     ", 10, 14, 0, 0, false,
+        Skill conLoc = new Skill("      Cơn Lốc     ", 10, 18, 0, 0, false,
                 "Gây sát thương 14 và làm đối thủ mất 8 mana", false);
         conLoc.setEffectImg("src/img/phongVu/gio.png");
         skills.add(conLoc);
@@ -76,7 +76,7 @@ public class PhongVu extends Mage {
 
         if (target instanceof HoaLong) {
             target.takeDamage(25);
-            heal(10);
+            heal(15);
             System.out.println("Khắc chế Hỏa Long! Phản lại 25 sát thương và hồi 10 HP.");
         } else if (target instanceof ThuyTam) {
             target.takeDamage(15);
