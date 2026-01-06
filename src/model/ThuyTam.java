@@ -131,6 +131,13 @@ public class ThuyTam extends Mage {
         if (!enemyState.specialUsed) score += 6;
         if (!playerState.specialUsed) score -= 4;
 
+        // PHẠT NẶNG KHI HP THẤP
+        if (enemyState.getHp() < 20) {
+            score -= 25; // Nguy hiểm!
+        } else if (enemyState.getHp() < 35) {
+            score -= 12; // Cảnh báo
+        }
+
         // 5. Đếm số skill có thể dùng (ưu thế linh hoạt) Nhiều skill = linh hoạt, áp đảo đối thủ
         int enemySkillCount = 0;
         int playerSkillCount = 0;
