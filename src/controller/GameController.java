@@ -109,14 +109,7 @@ public class GameController {
         }
     }
 
-    /** Xác định hiệu ứng skill */
-    private int getSkillType(Mage mage) {
-        if (mage instanceof HoaLong)
-            return 0; // lửa
-        if (mage instanceof ThuyTam)
-            return 1; // nước
-        return 2; // gió
-    }
+
 
     private void enemyTurn() {
         if (isGameOver)

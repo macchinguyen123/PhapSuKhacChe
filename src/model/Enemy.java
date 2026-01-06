@@ -25,21 +25,9 @@ public class Enemy {
         Runtime runtime = Runtime.getRuntime();
         runtime.gc();
 
-        long startTime = System.nanoTime();
-
         minimax(true, mage.cloneMage(), player.cloneMage(), 4); // độ sâu 3
-//        minimaxAlphaBeta(true, mage.cloneMage(), player.cloneMage(), 4, -Double.MAX_VALUE, Double.MAX_VALUE);
-        long endTime = System.nanoTime();
 
-        long usedMemoryBytes =
-                runtime.totalMemory() - runtime.freeMemory();
 
-        double executionTimeMs = (endTime - startTime) / 1_000_000.0;
-        double usedMemoryKB = usedMemoryBytes / 1024.0;
-
-        // ====== OUTPUT======
-        System.out.println("Memory used: " + Math.round(usedMemoryKB) + " kilobytes");
-        System.out.println("Executed Time: " + executionTimeMs + " ms");
         // ====== END MEASURE ======
 
         if (bestSkill == null) {
@@ -108,7 +96,7 @@ public class Enemy {
                 if (eval > best) {
                     best = eval;
 
-                    // lưu chiêu tốt nhất ở tầng 3, bước đầu tiên
+                    // lưu chiêu tốt nhất ở tầng 4, bước đầu tiên
                     if (depth == 4) {
                         bestSkill = skill;
                     }

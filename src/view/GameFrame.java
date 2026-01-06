@@ -229,6 +229,27 @@ public class GameFrame extends JFrame {
         bar.setValue(max);
         return bar;
     }
+    private void updateBarColor(JProgressBar bar, int value, int max, boolean isHp) {
+        float percent = (float) value / max;
+
+        if (isHp) {
+            if (percent > 0.6f) {
+                bar.setForeground(new Color(0, 200, 0)); // xanh lá
+            } else if (percent > 0.3f) {
+                bar.setForeground(Color.ORANGE);
+            } else {
+                bar.setForeground(Color.RED);
+            }
+        } else { // Mana
+            if (percent > 0.5f) {
+                bar.setForeground(new Color(30, 144, 255)); // xanh dương
+            } else if (percent > 0.2f) {
+                bar.setForeground(new Color(100, 149, 237));
+            } else {
+                bar.setForeground(new Color(138, 43, 226)); // tím
+            }
+        }
+    }
 
     private JLabel createLabel(String text, int x, int y) {
         JLabel label = new JLabel(text);
@@ -303,21 +324,32 @@ public class GameFrame extends JFrame {
      * Cập nhật chỉ số HP/Mana
      */
     public void updateBars(Mage player, Mage enemy) {
-        int playerHp = Math.min(player.getHp(), 100);
-        int playerMana = Math.min(player.getMana(), 50);
-        int enemyHp = Math.min(enemy.getHp(), 100);
-        int enemyMana = Math.min(enemy.getMana(), 50);
 
-        hpBarPlayer.setValue(playerHp);
-        manaBarPlayer.setValue(playerMana);
-        hpBarEnemy.setValue(enemyHp);
-        manaBarEnemy.setValue(enemyMana);
+        int maxHp = 100;
+        int maxMana = 50;
 
-        this.playerHP.setText("HP: " + playerHp);
-        this.playerMana.setText("Mana: " + playerMana);
-        this.enemyHP.setText("HP: " + enemyHp);
-        this.enemyMana.setText("Mana: " + enemyMana);
+        int playerHpValue = Math.max(0, Math.min(player.getHp(), maxHp));
+        int playerManaValue = Math.max(0, Math.min(player.getMana(), maxMana));
+        int enemyHpValue = Math.max(0, Math.min(enemy.getHp(), maxHp));
+        int enemyManaValue = Math.max(0, Math.min(enemy.getMana(), maxMana));
+
+        hpBarPlayer.setValue(playerHpValue);
+        manaBarPlayer.setValue(playerManaValue);
+        hpBarEnemy.setValue(enemyHpValue);
+        manaBarEnemy.setValue(enemyManaValue);
+
+        updateBarColor(hpBarPlayer, playerHpValue, maxHp, true);
+        updateBarColor(hpBarEnemy, enemyHpValue, maxHp, true);
+        updateBarColor(manaBarPlayer, playerManaValue, maxMana, false);
+        updateBarColor(manaBarEnemy, enemyManaValue, maxMana, false);
+
+        playerHP.setText("HP: " + playerHpValue + "/" + maxHp);
+        playerMana.setText("Mana: " + playerManaValue + "/" + maxMana);
+        enemyHP.setText("HP: " + enemyHpValue + "/" + maxHp);
+        enemyMana.setText("Mana: " + enemyManaValue + "/" + maxMana);
     }
+
+
 
     /**
      * Cập nhật log diễn biến
