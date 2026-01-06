@@ -47,9 +47,9 @@ public class ThuyTam extends Mage {
 
         // Trừ mana bản thân đúng chuẩn
         int manaCost = Math.min(20, mana);
-        System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
+        System.out.println( name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
 
-        System.out.println(name + " dùng chiêu đặc biệt 🌊 Tuyệt Kỹ Thủy Tâm!");
+        System.out.println(name + " dùng chiêu đặc biệt Tuyệt Kỹ Thủy Tâm!");
 
         if (target instanceof HoaLong) {
             int healAmount = Math.min(50, 20 * 2); // ví dụ hồi gấp đôi sát thương

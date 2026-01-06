@@ -62,7 +62,7 @@ public abstract class Mage {
     // Sử dụng cùng Skill.execute(user, target, playerMage, enemyMage)
     public void useSkill(Skill skill, Mage target) {
         if (!canUseSkill(skill)) {
-            System.out.println("❌ " + name + " không thể dùng " + skill.getName() + "!");
+            System.out.println(name + " không thể dùng " + skill.getName() + "!");
             return;
         }
 
@@ -75,9 +75,9 @@ public abstract class Mage {
         limitStats();
         target.limitStats();
     }
+
     public void useSkillSample(Skill skill, Mage target) {
         if (!canUseSkill(skill)) {
-//            System.out.println("❌ " + name + " không thể dùng " + skill.getName() + "!");
             return;
         }
 

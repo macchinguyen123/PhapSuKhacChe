@@ -48,7 +48,7 @@ public class HoaLong extends Mage {
 
         // Trừ mana bản thân và log
         int manaCost = Math.min(20, mana);
-        System.out.println("💧 " + name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
+        System.out.println( name + " mất " + manaCost + " mana để dùng chiêu đặc biệt.");
 
         System.out.println(name + " dùng chiêu đặc biệt Long Viêm Trảm!");
 
