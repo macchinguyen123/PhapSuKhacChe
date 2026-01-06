@@ -96,7 +96,7 @@ public class Skill {
             else if (user instanceof PhongVu) ((PhongVu) user).useSpecial(target);
             else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target);
 
-            // 🔒 ĐÁNH DẤU ĐÃ DÙNG
+            // ĐÁNH DẤU ĐÃ DÙNG
             user.markSpecialUsed();
         }
 
@@ -166,7 +166,7 @@ public class Skill {
             else if (user instanceof PhongVu) ((PhongVu) user).useSpecial(target);
             else if (user instanceof ThuyTam) ((ThuyTam) user).useSpecial(target);
 
-            // 🔒 ĐÁNH DẤU ĐÃ DÙNG
+            // ĐÁNH DẤU ĐÃ DÙNG
             user.markSpecialUsed();
         }
 

@@ -61,11 +61,20 @@ public class Enemy {
     }
 
     /**
+     * Bọn e dựa theo cấu trúc của cô và chỉnh lại cho phù hợp với game của bạn em
      * maximizing = true -> lượt Enemy (AI)
      * maximizing = false -> lượt Player (bạn)
      * enemyState, playerState -> bản clone (mô phỏng)
      * depth -> độ sâu còn lại
+     *Duyệt qua tất cả skill có thể dùng
      *
+     * Với mỗi skill:
+     *
+     * Clone trạng thái
+     *
+     * Dùng skill
+     *
+     * Gọi minimax xuống tầng dưới
      * @param maximizing
      * @param enemyState
      * @param playerState
